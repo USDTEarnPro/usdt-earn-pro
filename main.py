@@ -8,7 +8,7 @@ from telebot import types
 app = Flask(__name__, template_folder='.')
 
 BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
-ADMIN_ID = 8780715969
+ADMIN_ID = 123456789 # এখানে আপনার টেলিগ্রাম আইডি দিন
 bot = telebot.TeleBot(BOT_TOKEN)
 
 MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
@@ -32,13 +32,14 @@ def get_user():
         
         user = users_col.find_one({"user_id": user_id})
         
+        # যদি ইউজার নতুন হয়
         if not user:
-            # নতুন ইউজার তৈরি (joined2 যোগ করা হয়েছে)
             users_col.insert_one({
                 "user_id": user_id, "name": name, "balance": 0.0, 
-                "missions": 0, "joined": 0, "joined2": 0, "refs": 0 
+                "missions": 0, "joined": 0, "joined2": 0, "refs": 0
             })
             
+            # রেফারেল লজিক (নিজে নিজে রেফার করলে কাউন্ট হবে না)
             if referrer_id and referrer_id != user_id:
                 referrer = users_col.find_one({"user_id": referrer_id})
                 if referrer:
@@ -58,7 +59,7 @@ def get_user():
             "balance": float(user.get("balance", 0.0)), 
             "missions": int(user.get("missions", 0)), 
             "joined": int(user.get("joined", 0)), 
-            "joined2": int(user.get("joined2", 0)), # নতুন চ্যানেলের স্ট্যাটাস
+            "joined2": int(user.get("joined2", 0)), 
             "refs": int(user.get("refs", 0)), 
             "history": history_data
         })
@@ -86,7 +87,6 @@ def verify_mission():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# নতুন চ্যানেলের ভেরিফাই রুট
 @app.route('/api/verify_mission2', methods=['POST'])
 def verify_mission2():
     try:
@@ -108,12 +108,33 @@ def verify_mission2():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+@app.route('/api/request_withdraw', methods=['POST'])
+def request_withdraw():
+    try:
+        data = request.json
+        user_id = str(data.get('user_id'))
+        amount = float(data.get('amount'))
+        address = data.get('address')
+        
+        user = users_col.find_one({"user_id": user_id})
+        if user and user.get("refs", 0) >= 10 and amount <= user.get("balance", 0.0) and amount >= 0.01:
+            withdraw_col.insert_one({
+                "user_id": user_id, "name": user.get("name"), "address": address, 
+                "amount": amount, "status": "Pending", "time": datetime.now().strftime("%Y-%m-%d %H:%M")
+            })
+            try:
+                bot.send_message(ADMIN_ID, f"🚨 New Withdraw Request!\n👤 Name: {user.get('name')}\n🆔 ID: `{user_id}`\n💰 Amount: {amount} USDT\n📍 Address: `{address}`\n\nTo Pay: `/pay {user_id} {amount}`", parse_mode='Markdown')
+            except: pass
+            return jsonify({"status": "success", "message": "Withdraw request sent to admin."})
+        return jsonify({"status": "error", "message": "Requirements not met or insufficient balance."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     markup = types.InlineKeyboardMarkup()
     web_app_btn = types.InlineKeyboardButton(text="💎 Open App", web_app=types.WebAppInfo(url="https://usdt-earn-pro.onrender.com"))
     markup.add(web_app_btn)
-    
     bot.reply_to(message, "👇 Click below to open the app", reply_markup=markup)
 
 if __name__ == '__main__':
