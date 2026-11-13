@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>USDT EARN PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Adsgram Script -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -54,11 +53,6 @@
         .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; font-weight: 500;}
 
         .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px);}
-        .watch-card { display: flex; justify-content: space-between; align-items: center; border-color: rgba(255, 170, 0, 0.2); background: linear-gradient(145deg, #18140a, #0a0906);}
-        .watch-title { color: #ffaa00; font-size: 11px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px;}
-        .watch-text { font-weight: 800; font-size: 15px; margin-bottom: 4px;}
-        .watch-sub { color: var(--text-muted); font-size: 11px; font-weight: 500;}
-        
         .explore-card { display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: linear-gradient(145deg, #0f1c18, #060d0a); border-top: 1px solid rgba(0,255,136,0.2);}
         .explore-left { width: 70%; }
         .explore-title { font-weight: 800; font-size: 16px; margin-bottom: 8px; }
@@ -84,7 +78,7 @@
         .nav-icon svg { width: 26px; height: 26px; fill: currentColor; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: linear-gradient(160deg, #0d1814, #060a08); width: 90%; max-width: 400px; border-radius: 24px; padding: 25px; border: 1px solid var(--border); animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.8);}
+        .modal-content { background: linear-gradient(160deg, #0d1814, #060a08); width: 90%; max-width: 400px; border-radius: 24px; padding: 25px; border: 1px solid var(--border); animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-height: 80vh; overflow-y: auto;}
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .modal-title { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 10px;}
@@ -99,6 +93,12 @@
         .invite-box { background: #060a08; border: 1px solid #333; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .invite-link { font-size: 12px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 85%; font-weight: 600;}
         .copy-icon { color: #888; cursor: pointer; }
+
+        .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1a1a1a; }
+        .history-left { text-align: left; }
+        .history-title { font-weight: 700; font-size: 14px; color: #fff; }
+        .history-time { font-size: 10px; color: #555; margin-top: 4px; }
+        .history-amount { color: var(--accent); font-weight: 800; font-size: 14px; background: #0d2219; padding: 4px 10px; border-radius: 8px; height: fit-content;}
     </style>
 </head>
 <body>
@@ -217,16 +217,6 @@
                 </div>
             </div>
 
-            <div class="card watch-card">
-                <div>
-                    <div class="watch-title">🔥 WATCH & EARN</div>
-                    <div class="watch-text">Watch Ad · +0.001 USDT</div>
-                    <div class="watch-sub">Ads for next withdraw: 3/3</div>
-                </div>
-                <!-- Watch Ad Button calling watchAd() -->
-                <button class="btn" style="width: auto; padding: 12px 18px; font-size: 13px;" onclick="watchAd()">▶ Watch</button>
-            </div>
-
             <div class="card explore-card" onclick="switchTab('missions')">
                 <div class="explore-left">
                     <div class="explore-title">Explore & Earn USDT</div>
@@ -293,7 +283,7 @@
                 <div style="border: 1px solid var(--border); border-radius: 14px; padding: 15px; margin-bottom: 20px; background: rgba(0,255,136,0.03);">
                     <div style="color: var(--accent); font-size: 11px; font-weight: 800; margin-bottom: 5px;">⚡ Verified Referral Milestone</div>
                     <div style="font-weight: 800; font-size: 14px; margin-bottom: 8px;">Earn +0.050 USDT per verified friend</div>
-                    <p style="font-size: 11px; color: var(--text-muted); line-height: 1.6;">When a friend joins via your referral link, you receive an instant bot alert and they appear below as Processing. As soon as they complete 100% of all active missions, their status upgrades to Completed.</p>
+                    <p style="font-size: 11px; color: var(--text-muted); line-height: 1.6;">When a friend joins via your referral link, you receive an instant bot alert and they appear below as Processing.</p>
                 </div>
                 <div class="invite-box">
                     <div class="invite-link" id="ref-link">https://t.me/...</div>
@@ -369,7 +359,7 @@
                 <input type="number" class="modal-input" placeholder="0.05">
             </div>
             <div class="warning-text">
-                Min 0.01 · Max 0.5 USDT · Fee 30% · Ads 3/3<br>
+                Min 0.01 · Max 0.5 USDT · Fee 30%<br>
                 <span style="color: #ff4444; font-weight: bold;">⚠️ Requires 10 Active Referrals to unlock!</span>
             </div>
             <button class="btn" onclick="requestWithdraw()">Confirm Cashout</button>
@@ -382,10 +372,12 @@
                 <div class="modal-title">Verified Payouts</div>
                 <div class="close-btn" onclick="closeModal('historyModal')">✕</div>
             </div>
-            <div id="history-list" style="text-align: center; padding: 40px 0;">
-                <div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div>
-                <div style="font-weight: 700; font-size: 15px;">No History Found</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your payout history will appear here.</div>
+            <div id="history-list" style="padding: 10px 0;">
+                <div style="text-align: center; padding: 40px 0;">
+                    <div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div>
+                    <div style="font-weight: 700; font-size: 15px;">No History Found</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your payout history will appear here.</div>
+                </div>
             </div>
         </div>
     </div>
@@ -397,13 +389,8 @@
         let userId = null;
         let currentBalance = 0.000;
         let userRefs = 0;
-        
-        // Adsgram Setup (এখানে আপনার ব্লক আইডি বসাবেন)
-        const adController = window.Adsgram.init({ blockId: "আপনার_ব্লক_আইডি_এখানে_বসান" });
 
         const user = tg.initDataUnsafe?.user;
-        
-        // রেফারেল আইডি রিড করা
         const urlParams = new URLSearchParams(window.location.search);
         const referrerId = urlParams.get('start') || null;
 
@@ -414,7 +401,6 @@
             document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot?start=${user.id}`;
             
-            // লোড ডাটা (রেফারার আইডিসহ)
             fetch('/api/get_user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -426,10 +412,14 @@
             })
             .then(res => res.json())
             .then(data => {
-                currentBalance = data.balance;
+                if(data.status === "error") {
+                    alert("Server Error: " + data.message);
+                    return;
+                }
+                currentBalance = data.balance || 0.0;
                 userRefs = data.refs || 0;
                 updateBalanceUI(currentBalance);
-                document.getElementById('mission-count').innerText = `${data.missions} Completed`;
+                document.getElementById('mission-count').innerText = `${data.missions || 0} Completed`;
                 document.getElementById('ref-count').innerText = `${userRefs} Friends`;
 
                 if(data.joined === 1) {
@@ -437,6 +427,13 @@
                     document.getElementById('verify-btn').style.display = 'none';
                     document.getElementById('claimed-text').style.display = 'block';
                 }
+
+                // লোড হিস্ট্রি
+                renderHistory(data.history);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Network Error. Please try again.");
             });
         } else {
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot`;
@@ -468,7 +465,7 @@
         }
         
         function requestWithdraw() {
-            alert('Withdrawal request submitted successfully!');
+            alert('Withdrawal request submitted successfully! It will be processed within 24 hours.');
             closeModal('withdrawModal');
         }
 
@@ -517,7 +514,8 @@
                         let missions = parseInt(document.getElementById('mission-count').innerText) + 1;
                         document.getElementById('mission-count').innerText = `${missions} Completed`;
 
-                        updateHistory();
+                        // ডাইনামিকভাবে হিস্ট্রি রিলোড করা
+                        fetchHistory();
                         alert(data.message);
                     } else {
                         alert("Error: " + data.message);
@@ -526,50 +524,45 @@
             }
         }
 
-        function updateHistory() {
-            const historyList = document.getElementById('history-list');
-            const date = new Date();
-            const timeString = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
-            historyList.style.padding = '0';
-            historyList.innerHTML = `
-                <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #1a1a1a;">
-                    <div>
-                        <div style="font-weight: 600; font-size: 14px; text-align: left;">Joined SABX Earn BD</div>
-                        <div style="font-size: 11px; color: #4facfe; margin-top: 5px; text-align: left;">Verified Mission ✅</div>
-                        <div style="font-size: 10px; color: #555; margin-top: 5px; text-align: left;">Today, ${timeString}</div>
+        // হিস্ট্রি রেন্ডার করার ফাংশন
+        function renderHistory(historyArray) {
+            const list = document.getElementById('history-list');
+            if (!historyArray || historyArray.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; padding: 40px 0;">
+                        <div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div>
+                        <div style="font-weight: 700; font-size: 15px;">No History Found</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your payout history will appear here.</div>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = historyArray.map(item => `
+                <div class="history-item">
+                    <div class="history-left">
+                        <div class="history-title">${item.task}</div>
+                        <div class="history-time">${item.time}</div>
                     </div>
-                    <div style="color: var(--accent); font-weight: 700; font-size: 14px; background: #0d2219; padding: 5px 10px; border-radius: 8px; height: fit-content;">+0.010 USDT</div>
+                    <div class="history-amount">+${item.amount.toFixed(3)} USDT</div>
                 </div>
-            `;
+            `).join('');
+        }
+
+        // নতুন করে হিস্ট্রি আনার ফাংশন (ভেরিফাই করার পর কল হবে)
+        function fetchHistory() {
+            fetch('/api/get_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, name: document.getElementById('user-name').innerText })
+            })
+            .then(res => res.json())
+            .then(data => {
+                renderHistory(data.history);
+            });
         }
 
         function openHistoryModal() { 
             document.getElementById('historyModal').style.display = 'flex'; 
-        }
-
-        // অ্যাড দেখার ফাংশন
-        async function watchAd() {
-            try {
-                const result = await adController.show();
-                if (result.done) {
-                    fetch('/api/add_ad_reward', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: userId })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if(data.status === "success") {
-                            currentBalance += 0.001;
-                            updateBalanceUI(currentBalance);
-                            alert("Ad Watched! +0.001 USDT added.");
-                        }
-                    });
-                }
-            } catch (e) {
-                alert("Ad not available right now. Try again later.");
-            }
         }
     </script>
 </body>
