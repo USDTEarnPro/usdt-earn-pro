@@ -388,13 +388,18 @@
         let userId = null;
         let currentBalance = 0.000;
         let userRefs = 0;
+        const BOT_USERNAME = "EarnUSDTPro_Bot"; 
 
         const user = tg.initDataUnsafe?.user;
-        const urlParams = new URLSearchParams(window.location.search);
-        const referrerId = urlParams.get('start') || null;
-
-        // এখানে আপনার নতুন বটের ইউজারনেম বসানো হয়েছে
-        const BOT_USERNAME = "EarnUSDTPro_Bot"; 
+        
+        // টেলিগ্রামের নতুন এবং পুরনো ভার্সন থেকে রেফারার আইডি বের করা
+        let referrerId = null;
+        if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+            referrerId = tg.initDataUnsafe.start_param;
+        } else {
+            const urlParams = new URLSearchParams(window.location.search);
+            referrerId = urlParams.get('start');
+        }
 
         if (user) {
             userId = user.id;
@@ -407,21 +412,21 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    user_id: userId, 
+                    user_id: userId.toString(), 
                     name: document.getElementById('user-name').innerText,
-                    referrer_id: referrerId 
+                    referrer_id: referrerId
                 })
             })
             .then(res => res.json())
             .then(data => {
                 if(data.status === "error") {
-                    alert("Server Error: " + data.message);
+                    alert("সার্ভার এরর: " + data.message);
                     return;
                 }
-                currentBalance = data.balance || 0.0;
-                userRefs = data.refs || 0;
+                currentBalance = data.balance;
+                userRefs = data.refs;
                 updateBalanceUI(currentBalance);
-                document.getElementById('mission-count').innerText = `${data.missions || 0} Completed`;
+                document.getElementById('mission-count').innerText = `${data.missions} Completed`;
                 document.getElementById('ref-count').innerText = `${userRefs} Friends`;
 
                 if(data.joined === 1) {
@@ -431,6 +436,10 @@
                 }
 
                 renderHistory(data.history);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("নেটওয়ার্ক এরর! সার্ভার হয়তো ঘুমিয়ে আছে। ৩০ সেকেন্ড পর আবার চেষ্টা করুন।");
             });
         } else {
             document.getElementById('ref-link').innerText = `https://t.me/${BOT_USERNAME}`;
@@ -440,7 +449,6 @@
             document.getElementById('main-balance').innerHTML = `${bal.toFixed(3)} <span>USDT</span>`;
             document.getElementById('main-usd').innerText = `≈ Real USD Value: $${bal.toFixed(2)} USD`;
             document.getElementById('stat-balance').innerText = `${bal.toFixed(3)} USDT`;
-            
             document.getElementById('wallet-balance').innerText = `$${bal.toFixed(2)}`;
             document.getElementById('wallet-usdt').innerText = `${bal.toFixed(3)} USDT`;
         }
@@ -455,7 +463,7 @@
 
         function openWithdrawModal() { 
             if (userRefs < 10) {
-                alert("⚠️ You need at least 10 active referrals to unlock withdrawals!\n\nInvite your friends using the Invite tab.");
+                alert("⚠️ উইথড্র করতে কমপক্ষে ১০ জন রেফারেল দরকার!");
                 return;
             }
             document.getElementById('withdrawModal').style.display = 'flex'; 
@@ -464,16 +472,10 @@
         function submitWithdraw() {
             const address = document.getElementById('wd-address').value;
             const amount = document.getElementById('wd-amount').value;
-
             if(!address || !amount || amount < 0.01) {
-                alert("Please enter a valid address and amount (Min 0.01).");
+                alert("সঠিক অ্যাড্রেস এবং এমাউন্ট দিন (সর্বনিম্ন 0.01)।");
                 return;
             }
-
-            const btn = event.target;
-            btn.innerText = "Processing...";
-            btn.disabled = true;
-
             fetch('/api/request_withdraw', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -482,13 +484,11 @@
             .then(res => res.json())
             .then(data => {
                 if(data.status === "success") {
-                    alert("✅ Withdraw request submitted! Admin will process it soon.");
+                    alert("✅ উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!");
                     closeModal('withdrawModal');
                 } else {
-                    alert("Error: " + data.message);
+                    alert("এরর: " + data.message);
                 }
-                btn.innerText = "Confirm Cashout";
-                btn.disabled = false;
             });
         }
 
@@ -496,7 +496,7 @@
 
         function copyLink() {
             const link = document.getElementById('ref-link').innerText;
-            navigator.clipboard.writeText(link).then(() => alert("Referral link copied!"));
+            navigator.clipboard.writeText(link).then(() => alert("রেফারেল লিংক কপি হয়েছে!"));
         }
 
         function shareLink() {
@@ -516,19 +516,21 @@
 
         function verifyChannel() {
             if(isJoined && userId) {
-                document.getElementById('verify-btn').innerText = 'Verifying...';
-                document.getElementById('verify-btn').style.background = '#333';
-                document.getElementById('verify-btn').style.color = '#fff';
+                const btn = document.getElementById('verify-btn');
+                btn.innerText = 'Verifying...';
+                btn.style.background = '#333';
+                btn.style.color = '#fff';
+                btn.disabled = true;
 
                 fetch('/api/verify_mission', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId })
+                    body: JSON.stringify({ user_id: userId.toString() })
                 })
                 .then(res => res.json())
                 .then(data => {
                     if(data.status === "success") {
-                        document.getElementById('verify-btn').style.display = 'none';
+                        btn.style.display = 'none';
                         document.getElementById('claimed-text').style.display = 'block';
                         
                         currentBalance += 0.010;
@@ -538,10 +540,21 @@
                         document.getElementById('mission-count').innerText = `${missions} Completed`;
 
                         fetchHistory();
-                        alert(data.message);
+                        alert("✅ ভেরিফাই সফল! +0.010 USDT যোগ হয়েছে।");
                     } else {
-                        alert("Error: " + data.message);
+                        alert("এরর: " + data.message);
+                        btn.innerText = 'Verify';
+                        btn.style.background = '#ffaa00';
+                        btn.style.color = '#000';
+                        btn.disabled = false;
                     }
+                })
+                .catch(err => {
+                    alert("নেটওয়ার্ক এরর! আবার চেষ্টা করুন।");
+                    btn.innerText = 'Verify';
+                    btn.style.background = '#ffaa00';
+                    btn.style.color = '#000';
+                    btn.disabled = false;
                 });
             }
         }
@@ -553,11 +566,9 @@
                     <div style="text-align: center; padding: 40px 0;">
                         <div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div>
                         <div style="font-weight: 700; font-size: 15px;">No History Found</div>
-                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your payout history will appear here.</div>
                     </div>`;
                 return;
             }
-
             list.innerHTML = historyArray.map(item => `
                 <div class="history-item">
                     <div class="history-left">
@@ -573,7 +584,7 @@
             fetch('/api/get_user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, name: document.getElementById('user-name').innerText })
+                body: JSON.stringify({ user_id: userId.toString(), name: document.getElementById('user-name').innerText })
             })
             .then(res => res.json())
             .then(data => {
