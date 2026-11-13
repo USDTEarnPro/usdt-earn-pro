@@ -7,95 +7,133 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0b141a; --card-bg: #11241f; --text: #ffffff; --accent: #00ff88; --border: #1f4a3d; --text-muted: #8e9b95; }
+        :root { 
+            --bg: #060a08; 
+            --card-bg: linear-gradient(145deg, #0f1c17, #09120f); 
+            --text: #ffffff; 
+            --accent: #00ff88; 
+            --border: #1a382b; 
+            --text-muted: #8e9b95;
+            --glow: 0 0 20px rgba(0,255,136,0.3);
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            padding-bottom: 85px; 
+            -webkit-tap-highlight-color: transparent;
+            background-image: radial-gradient(circle at 50% 0%, rgba(0,255,136,0.08) 0%, transparent 60%);
+            background-attachment: fixed;
+        }
         
-        .app-header { display: flex; justify-content: center; align-items: center; padding: 15px; background: #000; border-bottom: 1px solid #111; }
-        .header-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; color: var(--accent);}
-        .header-logo { width: 24px; height: 24px; }
+        /* Top Header */
+        .app-header { display: flex; justify-content: center; align-items: center; padding: 16px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border-bottom: 1px solid #111; position: sticky; top: 0; z-index: 50;}
+        .header-title { font-size: 18px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; color: var(--accent); text-shadow: var(--glow);}
+        .header-logo { width: 26px; height: 26px; }
 
+        /* Profile Section */
         .profile-section { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
         .user-left { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #000; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent); font-size: 22px; text-transform: uppercase; }
-        .user-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; line-height: 1.2;}
-        .user-username { font-size: 12px; color: var(--text-muted); margin-bottom: 2px;}
-        .user-status { font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 5px;}
-        .user-status::before { content: ''; display: block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%;}
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #000; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent); font-size: 22px; text-transform: uppercase; box-shadow: inset 0 0 10px rgba(0,255,136,0.2); }
+        .user-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+        .user-username { font-size: 12px; color: var(--text-muted); margin-bottom: 3px;}
+        .user-status { font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 5px; font-weight: 600;}
+        .user-status::before { content: ''; display: block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent);}
         .user-right { display: flex; align-items: center; gap: 10px; }
         .icon-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        .network-badge { background: transparent; border: 1px solid var(--border); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
+        .network-badge { background: rgba(0,255,136,0.05); border: 1px solid var(--border); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 5px; font-weight: 600;}
 
+        /* Main Container */
         .container { padding: 0 20px; }
-        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .main-balance-card { background: linear-gradient(180deg, #0f1c17 0%, #08100d 100%); border: 1px solid var(--border); border-radius: 20px; padding: 25px 20px; margin-bottom: 15px; }
+        /* Balance Card (Premium Gradient) */
+        .main-balance-card { 
+            background: linear-gradient(160deg, rgba(20, 38, 30, 0.9) 0%, rgba(8, 15, 12, 0.9) 100%); 
+            border: 1px solid var(--border); 
+            border-top: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 24px; padding: 25px 20px; margin-bottom: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            position: relative; overflow: hidden;
+        }
         .balance-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
-        .balance-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;}
-        .rate-badge { font-size: 10px; border: 1px solid var(--border); padding: 4px 8px; border-radius: 10px; color: var(--text-muted); }
-        .balance-amount { font-size: 42px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: baseline; gap: 8px; color: #fff;}
-        .balance-amount span { font-size: 20px; color: var(--accent); font-weight: 600;}
-        .usd-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 20px;}
+        .balance-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600;}
+        .rate-badge { font-size: 10px; border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; color: var(--accent); background: rgba(0,255,136,0.05); font-weight: 600;}
+        .balance-amount { font-size: 46px; font-weight: 800; margin-bottom: 5px; display: flex; align-items: baseline; gap: 8px; color: #fff; letter-spacing: -1px;}
+        .balance-amount span { font-size: 20px; color: var(--accent); font-weight: 700;}
+        .usd-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px;}
         
         .action-buttons { display: flex; gap: 12px; }
-        .btn { background-color: var(--accent); color: #000; border: none; padding: 14px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn:active { transform: scale(0.97); }
-        .btn-outline { background-color: transparent; color: var(--text); border: 1px solid #333; }
+        .btn { 
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%); 
+            color: #000; border: none; padding: 15px 20px; border-radius: 14px; 
+            font-weight: 800; cursor: pointer; font-size: 14px; width: 100%; 
+            display: flex; justify-content: center; align-items: center; gap: 8px; 
+            transition: 0.2s; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.25);
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-outline { background: rgba(255,255,255,0.03); color: var(--text); border: 1px solid rgba(255,255,255,0.1); box-shadow: none;}
+        
+        /* 3 Stats Boxes */
+        .stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
+        .stat-box { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.2s;}
+        .stat-box:active { transform: scale(0.95); border-color: var(--accent);}
+        .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin: 0 auto 10px auto; }
+        .stat-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .stat-title { font-weight: 700; font-size: 13px; color: #fff;}
+        .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; font-weight: 500;}
 
-        .stats-grid { display: flex; gap: 10px; margin-bottom: 15px; }
-        .stat-box { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer; }
-        .stat-box:active { background: #1a2e25; }
-        .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin: 0 auto 10px auto; background: #1a2e25;}
-        .stat-title { font-weight: 600; font-size: 13px; color: #fff;}
-        .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; }
-
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 15px; }
-        .watch-card { display: flex; justify-content: space-between; align-items: center; border-color: #3d2e1a; }
-        .watch-title { color: #ffaa00; font-size: 11px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px;}
-        .watch-text { font-weight: 600; font-size: 15px; margin-bottom: 3px;}
+        /* Cards & Lists */
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; }
+        .watch-card { display: flex; justify-content: space-between; align-items: center; border-color: rgba(255, 170, 0, 0.2); background: linear-gradient(145deg, #18140a, #0a0906);}
+        .watch-title { color: #ffaa00; font-size: 11px; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
+        .watch-text { font-weight: 700; font-size: 15px; margin-bottom: 3px;}
         .watch-sub { color: var(--text-muted); font-size: 11px; }
         
-        .explore-card { display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .explore-card { display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: linear-gradient(145deg, #0f1c18, #060d0a); border-top: 1px solid rgba(0,255,136,0.2);}
         .explore-left { width: 70%; }
-        .explore-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+        .explore-title { font-weight: 800; font-size: 16px; margin-bottom: 8px; }
         .explore-text { color: var(--text-muted); font-size: 12px; line-height: 1.4; margin-bottom: 15px; }
-        .explore-icon { width: 60px; height: 60px; border-radius: 16px; border: 1px solid var(--accent); display: flex; justify-content: center; align-items: center; background: #0d1f18;}
+        .explore-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; justify-content: center; align-items: center; }
+        .explore-icon img { width: 100%; height: 100%; object-fit: contain; }
         
-        .quick-nav { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 20px;}
-        .quick-title { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 15px; letter-spacing: 0.5px;}
-        .nav-item-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
+        .quick-nav { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px;}
+        .quick-title { font-size: 11px; color: var(--text-muted); font-weight: 800; margin-bottom: 15px; letter-spacing: 0.5px;}
+        .nav-item-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; padding: 12px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid transparent; transition: 0.2s;}
+        .nav-item-card:active { border-color: var(--border); background: rgba(0,255,136,0.05); }
         .nav-item-card:last-child { margin-bottom: 0; }
         .nav-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
+        .nav-icon-box img { width: 24px; height: 24px; }
         .bg-blue { background: #0e2a3b; }
         .bg-purple { background: #2b1433; }
         .nav-text-box { flex: 1; margin-left: 15px; }
-        .nav-title { font-weight: 600; font-size: 14px; margin-bottom: 3px;}
+        .nav-title { font-weight: 700; font-size: 14px; margin-bottom: 3px;}
         .nav-sub { font-size: 11px; color: var(--text-muted); }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid #111; z-index: 100; }
-        .nav-item { text-align: center; color: #555; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: 500;}
-        .nav-item.active { color: var(--accent); }
+        /* Bottom Navigation */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid #111; z-index: 100; }
+        .nav-item { text-align: center; color: #555; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: 600;}
+        .nav-item.active { color: var(--accent); text-shadow: var(--glow);}
         .nav-icon { font-size: 24px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;}
         .nav-icon img { width: 100%; height: 100%; object-fit: contain; }
 
-        .img-icon { width: 24px; height: 24px; object-fit: contain; }
-        .img-icon-large { width: 32px; height: 32px; object-fit: contain; }
         .img-icon-small { width: 18px; height: 18px; object-fit: contain; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #0d1612; width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; border: 1px solid var(--border); animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px;}
-        .close-btn { cursor: pointer; color: #888; font-size: 18px; background: #1a1a1a; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%;}
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: linear-gradient(160deg, #0d1814, #060a08); width: 90%; max-width: 400px; border-radius: 24px; padding: 25px; border: 1px solid var(--border); animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.8);}
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .modal-title { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px;}
+        .close-btn { cursor: pointer; color: #888; font-size: 18px; background: #1a1a1a; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; border-radius: 50%;}
         
-        .input-group { margin-bottom: 15px; }
-        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 500;}
-        .modal-input { width: 100%; padding: 15px; background: #060a08; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 14px; outline: none; }
+        .input-group { margin-bottom: 18px; }
+        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 600;}
+        .modal-input { width: 100%; padding: 16px; background: #000; color: #fff; border: 1px solid #333; border-radius: 14px; font-size: 14px; outline: none; transition: 0.2s;}
         .modal-input:focus { border-color: var(--accent); }
-        .warning-text { font-size: 11px; color: #ffaa00; margin-bottom: 20px; line-height: 1.5; }
+        .warning-text { font-size: 11px; color: #ffaa00; margin-bottom: 20px; line-height: 1.6; background: rgba(255,170,0,0.05); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,170,0,0.1);}
         
         .invite-box { background: #060a08; border: 1px solid #333; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .invite-link { font-size: 12px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 85%;}
@@ -149,17 +187,17 @@
 
             <div class="stats-grid">
                 <div class="stat-box" onclick="switchTab('wallet')">
-                    <div class="stat-icon"><img src="https://img.icons8.com/color/48/tether--v1.png" class="img-icon-large" alt="USDT"></div>
+                    <div class="stat-icon"><img src="https://i.ibb.co/680F1Z0/usdt-logo.png" alt="USDT"></div>
                     <div class="stat-title">Balance</div>
                     <div class="stat-value" id="stat-balance">0.000 USDT</div>
                 </div>
                 <div class="stat-box" onclick="switchTab('invite')">
-                    <div class="stat-icon" style="background: rgba(255,170,0,0.1);"><img src="https://img.icons8.com/fluency/48/crown.png" class="img-icon-large" alt="Referrals"></div>
+                    <div class="stat-icon"><img src="https://i.ibb.co/3s6yKqZ/crown.png" alt="Referrals"></div>
                     <div class="stat-title">Referrals</div>
-                    <div class="stat-value">0 Friends</div>
+                    <div class="stat-value" id="ref-count">0 Friends</div>
                 </div>
                 <div class="stat-box" onclick="switchTab('missions')">
-                    <div class="stat-icon"><img src="https://img.icons8.com/fluency/48/shield.png" class="img-icon-large" alt="Missions"></div>
+                    <div class="stat-icon"><img src="https://i.ibb.co/1K0Y6xJ/shield.png" alt="Missions"></div>
                     <div class="stat-title">Missions</div>
                     <div class="stat-value" id="mission-count">0 Completed</div>
                 </div>
@@ -180,13 +218,15 @@
                     <div class="explore-text">Complete verified missions to unlock instant rewards and USDT (BEP-20) payouts.</div>
                     <button class="btn" style="width: auto; padding: 10px 15px; font-size: 13px;">Start Missions →</button>
                 </div>
-                <div class="explore-icon"><img src="https://img.icons8.com/color/96/tether--v1.png" class="img-icon-large" style="width: 40px; height: 40px;" alt="USDT"></div>
+                <div class="explore-icon">
+                    <img src="https://i.ibb.co/680F1Z0/usdt-logo.png" alt="USDT">
+                </div>
             </div>
 
             <div class="quick-nav">
                 <div class="quick-title">QUICK NAVIGATION</div>
                 <div class="nav-item-card" onclick="switchTab('missions')">
-                    <div class="nav-icon-box bg-blue"><img src="https://img.icons8.com/fluency/48/task.png" class="img-icon" alt="Missions"></div>
+                    <div class="nav-icon-box bg-blue"><img src="https://img.icons8.com/fluency/48/task.png" alt="Missions"></div>
                     <div class="nav-text-box">
                         <div class="nav-title">Verified Missions</div>
                         <div class="nav-sub">Subscribe to partner channels & earn USDT</div>
@@ -194,7 +234,7 @@
                     <div style="color: #555; font-size: 20px;">›</div>
                 </div>
                 <div class="nav-item-card" onclick="switchTab('invite')">
-                    <div class="nav-icon-box bg-purple"><img src="https://img.icons8.com/fluency/48/gift.png" class="img-icon" alt="Invite"></div>
+                    <div class="nav-icon-box bg-purple"><img src="https://img.icons8.com/fluency/48/gift.png" alt="Invite"></div>
                     <div class="nav-text-box">
                         <div class="nav-title">Affiliate Program</div>
                         <div class="nav-sub">Invite friends & earn bonus when they finish tasks</div>
@@ -206,10 +246,10 @@
 
         <!-- MISSIONS PAGE -->
         <div id="page-missions" class="page">
-            <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 700; letter-spacing: 1px;">MISSIONS</h3>
+            <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 800; letter-spacing: 1px; text-shadow: var(--glow);">MISSIONS</h3>
             <div class="quick-nav">
                 <div class="nav-item-card" id="mission-sabx">
-                    <div class="nav-icon-box bg-blue"><img src="https://img.icons8.com/color/48/telegram-app.png" class="img-icon" alt="Telegram"></div>
+                    <div class="nav-icon-box bg-blue"><img src="https://img.icons8.com/color/48/telegram-app.png" alt="Telegram"></div>
                     <div class="nav-text-box">
                         <div class="nav-title">Join SABX Earn BD</div>
                         <div class="nav-sub" style="color: var(--accent); font-weight: 700;">+0.010 USDT</div>
@@ -228,7 +268,7 @@
                 <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Grow the community using your personal Mini App link.</p>
                 <div style="border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 20px; background: #0b1410;">
                     <div style="color: var(--accent); font-size: 11px; font-weight: 700; margin-bottom: 5px;">⚡ Verified Referral Milestone</div>
-                    <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Earn +0.050 USDT per verified friend</div>
+                    <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;">Earn +0.050 USDT per verified friend</div>
                     <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">When a friend joins via your referral link, you receive an instant bot alert and they appear below as Processing. As soon as they complete 100% of all active missions, their status upgrades to Completed.</p>
                 </div>
                 <div class="invite-box">
@@ -243,7 +283,7 @@
         <div id="page-wallet" class="page">
             <div class="main-balance-card">
                 <div class="balance-label" style="text-align: center; margin-bottom: 10px;">Estimated Portfolio Value</div>
-                <div class="balance-amount" style="justify-content: center; font-size: 36px;">$0.00</div>
+                <div class="balance-amount" id="wallet-balance" style="justify-content: center; font-size: 36px;">$0.00</div>
                 <div style="text-align: center; margin-bottom: 25px;">
                     <span style="background: #000; border: 1px solid #333; padding: 5px 12px; border-radius: 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
                         <img src="https://img.icons8.com/color/48/tether--v1.png" class="img-icon-small" alt="USDT"> 0.000 USDT
@@ -257,11 +297,11 @@
             <div class="quick-nav">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div class="quick-title" style="margin: 0;">WITHDRAWAL REQUESTS</div>
-                    <div style="color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
+                    <div style="color: var(--accent); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
                 </div>
                 <div style="text-align: center; padding: 30px 0;">
                     <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
-                    <div style="font-weight: 600; font-size: 14px;">No Withdrawals Recorded</div>
+                    <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT (BEP-20) payout history will appear here</div>
                 </div>
             </div>
@@ -276,7 +316,7 @@
         <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet')"><div class="nav-icon"><img src="https://img.icons8.com/fluency/48/wallet.png" alt="Wallet"></div><div>Wallet</div></div>
     </div>
 
-    <!-- MODALS -->
+    <!-- WITHDRAW MODAL -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -285,11 +325,15 @@
             </div>
             <div class="input-group"><label class="input-label">BEP-20 Wallet Address</label><input type="text" class="modal-input" placeholder="0xB204c47b...d23"></div>
             <div class="input-group"><label class="input-label">Amount (USDT)</label><input type="number" class="modal-input" placeholder="0.05"></div>
-            <div class="warning-text">Min 0.01 · Max 0.5 USDT · Fee 30% · Ads 3/3 · Active referrals 0/10<br><br>⚠️ Only send to a BEP-20 (BSC) address. Wrong network = lost funds.</div>
-            <button class="btn" onclick="alert('Withdrawal request submitted!')">Confirm Cashout</button>
+            <div class="warning-text">
+                Min 0.01 · Max 0.5 USDT · Fee 30% · Ads 3/3<br>
+                <span style="color: #ff4444; font-weight: bold;">⚠️ Requires 10 Active Referrals to unlock!</span>
+            </div>
+            <button class="btn" onclick="requestWithdraw()">Confirm Cashout</button>
         </div>
     </div>
 
+    <!-- HISTORY MODAL -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -298,7 +342,7 @@
             </div>
             <div id="history-list" style="text-align: center; padding: 40px 0;">
                 <div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div>
-                <div style="font-weight: 600; font-size: 15px;">No History Found</div>
+                <div style="font-weight: 700; font-size: 15px;">No History Found</div>
                 <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your payout history will appear here.</div>
             </div>
         </div>
@@ -310,6 +354,7 @@
         
         let userId = null;
         let currentBalance = 0.000;
+        let userRefs = 0; // ডেমো রেফারেল কাউন্ট (ডাটাবেস থেকে আসবে)
 
         const user = tg.initDataUnsafe?.user;
         if (user) {
@@ -328,11 +373,9 @@
             .then(res => res.json())
             .then(data => {
                 currentBalance = data.balance;
-                document.getElementById('main-balance').innerHTML = `${data.balance.toFixed(3)} <span>USDT</span>`;
-                document.getElementById('stat-balance').innerText = `${data.balance.toFixed(3)} USDT`;
+                updateBalanceUI(currentBalance);
                 document.getElementById('mission-count').innerText = `${data.missions} Completed`;
 
-                // যদি আগেই ভেরিফাই করা থাকে
                 if(data.joined === 1) {
                     document.getElementById('join-btn').style.display = 'none';
                     document.getElementById('verify-btn').style.display = 'none';
@@ -343,6 +386,12 @@
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot`;
         }
 
+        function updateBalanceUI(bal) {
+            document.getElementById('main-balance').innerHTML = `${bal.toFixed(3)} <span>USDT</span>`;
+            document.getElementById('stat-balance').innerText = `${bal.toFixed(3)} USDT`;
+            document.getElementById('wallet-balance').innerText = `$${bal.toFixed(2)}`;
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -351,7 +400,19 @@
             window.scrollTo(0,0); 
         }
 
-        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
+        function openWithdrawModal() { 
+            if (userRefs < 10) {
+                alert("You need at least 10 active referrals to unlock withdrawals!");
+                return;
+            }
+            document.getElementById('withdrawModal').style.display = 'flex'; 
+        }
+        
+        function requestWithdraw() {
+            alert('Withdrawal request submitted successfully!');
+            closeModal('withdrawModal');
+        }
+
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
         function copyLink() {
@@ -380,56 +441,9 @@
                 document.getElementById('verify-btn').style.background = '#333';
                 document.getElementById('verify-btn').style.color = '#fff';
 
-                // সার্ভারে ভেরিফাই রিকোয়েস্ট পাঠানো
                 fetch('/api/verify_mission', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId })
                 })
                 .then(res => res.json())
-                .then(data => {
-                    if(data.status === "success") {
-                        document.getElementById('verify-btn').style.display = 'none';
-                        document.getElementById('claimed-text').style.display = 'block';
-                        
-                        // রিয়েল-টাইম আপডেট
-                        currentBalance += 0.010;
-                        document.getElementById('main-balance').innerHTML = `${currentBalance.toFixed(3)} <span>USDT</span>`;
-                        document.getElementById('stat-balance').innerText = `${currentBalance.toFixed(3)} USDT`;
-                        
-                        let missions = parseInt(document.getElementById('mission-count').innerText) + 1;
-                        document.getElementById('mission-count').innerText = `${missions} Completed`;
-
-                        updateHistory();
-                        alert(data.message);
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                });
-            }
-        }
-
-        function updateHistory() {
-            const historyList = document.getElementById('history-list');
-            const date = new Date();
-            const timeString = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
-            historyList.style.padding = '0';
-            historyList.innerHTML = `
-                <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #1a1a1a;">
-                    <div>
-                        <div style="font-weight: 600; font-size: 14px; text-align: left;">Joined SABX Earn BD</div>
-                        <div style="font-size: 11px; color: #4facfe; margin-top: 5px; text-align: left;">Verified Mission ✅</div>
-                        <div style="font-size: 10px; color: #555; margin-top: 5px; text-align: left;">Today, ${timeString}</div>
-                    </div>
-                    <div style="color: var(--accent); font-weight: 700; font-size: 14px; background: #0d2219; padding: 5px 10px; border-radius: 8px; height: fit-content;">+0.010 USDT</div>
-                </div>
-            `;
-        }
-
-        function openHistoryModal() { 
-            document.getElementById('historyModal').style.display = 'flex'; 
-        }
-    </script>
-</body>
-</html>
