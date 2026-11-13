@@ -3,279 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>USDT EARN MASTER</title>
+    <title>USDT EARN PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg: #0b141a; 
-            --card-bg: #0d1a17; 
+            --bg: #060a08; 
+            --card-bg: #0d1411; 
+            --card-bg-light: #131d19;
             --text: #ffffff; 
             --accent: #00ff88; 
-            --border: #1f4a3d; 
-            --text-muted: #888;
+            --border: #1a2e25; 
+            --text-muted: #8e9b95;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { 
             background-color: var(--bg); 
             color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            padding-bottom: 70px; 
+            padding-bottom: 80px; 
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* Top App Header */
+        /* Top Header */
         .app-header { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background: #000; border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 50;
+            display: flex; justify-content: center; align-items: center;
+            padding: 15px; background: #000; border-bottom: 1px solid #111;
         }
-        .app-title { font-size: 18px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 8px;}
-        .app-logo { width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; font-weight: bold; font-size: 14px;}
+        .header-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .header-logo { width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; font-weight: bold; font-size: 14px; }
 
-        /* User Profile Header */
-        .user-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #222;}
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 42px; height: 42px; border-radius: 50%; background: #222; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--accent); }
-        .user-name { font-weight: 600; font-size: 16px;}
-        .user-status { font-size: 12px; color: var(--accent); display: flex; align-items: center; gap: 4px;}
+        /* User Profile Section */
+        .profile-section { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        .user-left { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; background: #222; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-weight: 700; color: var(--accent); font-size: 18px; }
+        .user-name { font-weight: 600; font-size: 16px; margin-bottom: 2px;}
+        .user-status { font-size: 12px; color: var(--accent); display: flex; align-items: center; gap: 5px;}
         .user-status::before { content: ''; display: block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%;}
-        .network-badge { background: transparent; border: 1px solid var(--border); color: var(--accent); padding: 5px 10px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
+        .user-right { display: flex; align-items: center; gap: 10px; }
+        .icon-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .network-badge { background: transparent; border: 1px solid var(--border); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
 
-        /* Pages */
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        /* Main Container */
+        .container { padding: 0 20px; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards */
-        .card { background: linear-gradient(145deg, #0f1f1a, #091411); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; text-align: center; }
-        .balance-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase;}
-        .balance-amount { font-size: 38px; font-weight: 700; margin: 10px 0 5px 0; color: var(--text); display: flex; justify-content: center; align-items: baseline; gap: 5px;}
-        .balance-amount span { font-size: 18px; color: var(--accent); font-weight: 600;}
-        .usd-value { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+        /* Balance Card */
+        .main-balance-card { background: linear-gradient(180deg, #0f1c17 0%, #08100d 100%); border: 1px solid var(--border); border-radius: 20px; padding: 25px 20px; margin-bottom: 15px; }
+        .balance-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
+        .balance-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;}
+        .rate-badge { font-size: 10px; border: 1px solid var(--border); padding: 4px 8px; border-radius: 10px; color: var(--text-muted); }
+        .balance-amount { font-size: 42px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: baseline; gap: 8px; color: #fff;}
+        .balance-amount span { font-size: 20px; color: var(--accent); font-weight: 600;}
+        .usd-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 20px;}
         
-        .action-buttons { display: flex; gap: 10px; }
-        .btn { background-color: var(--accent); color: #000; border: none; padding: 14px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 15px; width: 100%; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 5px;}
+        .action-buttons { display: flex; gap: 12px; }
+        .btn { background-color: var(--accent); color: #000; border: none; padding: 14px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
         .btn:active { transform: scale(0.97); }
-        .btn-outline { background-color: #1a1a1a; color: var(--text); border: 1px solid #333; }
+        .btn-outline { background-color: transparent; color: var(--text); border: 1px solid #333; }
 
-        /* Stats Grid */
-        .stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
-        .stat-box { flex: 1; background: #0d1a17; border: 1px solid var(--border); border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .stat-box:active { transform: scale(0.95); }
-        .stat-icon { font-size: 20px; margin-bottom: 8px; background: #11241f; width: 40px; height: 40px; border-radius: 10px; display: flex; justify-content: center; align-items: center; margin: 0 auto 8px auto; }
-        .stat-title { font-weight: 600; font-size: 13px; }
-        .stat-value { color: var(--text-muted); font-size: 12px; margin-top: 3px; }
+        /* 3 Stats Boxes */
+        .stats-grid { display: flex; gap: 10px; margin-bottom: 15px; }
+        .stat-box { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer; }
+        .stat-box:active { background: var(--card-bg-light); }
+        .stat-icon { font-size: 20px; margin-bottom: 10px; background: #1a2e25; width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin: 0 auto 10px auto; color: var(--accent);}
+        .stat-title { font-weight: 600; font-size: 13px; color: #fff;}
+        .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; }
 
-        /* List Items */
-        .list-card { background: #0d1a17; border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; text-align: left; }
-        .mission-item { display: flex; justify-content: space-between; align-items: center; background: #11241f; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1a3a2e; }
-        .mission-title { font-weight: 600; font-size: 14px; }
-        .mission-reward { color: var(--accent); font-size: 12px; font-weight: 600; margin-top: 4px; }
-        .btn-small { background: var(--accent); color: #000; padding: 8px 15px; border-radius: 8px; font-weight: 700; font-size: 12px; border: none; cursor: pointer; }
-        .btn-claimed { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        /* Cards & Lists */
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 15px; }
+        .watch-card { display: flex; justify-content: space-between; align-items: center; border-color: #3d2e1a; }
+        .watch-title { color: #ffaa00; font-size: 11px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px;}
+        .watch-text { font-weight: 600; font-size: 15px; margin-bottom: 3px;}
+        .watch-sub { color: var(--text-muted); font-size: 11px; }
+        
+        .explore-card { display: flex; justify-content: space-between; align-items: center; }
+        .explore-left { width: 70%; }
+        .explore-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+        .explore-text { color: var(--text-muted); font-size: 12px; line-height: 1.4; margin-bottom: 15px; }
+        .explore-icon { width: 60px; height: 60px; border-radius: 16px; border: 1px solid var(--accent); display: flex; justify-content: center; align-items: center; font-size: 28px; color: var(--accent); background: #0d1f18;}
+        
+        .quick-nav { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 20px;}
+        .quick-title { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 15px; letter-spacing: 0.5px;}
+        .nav-item-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
+        .nav-item-card:last-child { margin-bottom: 0; }
+        .nav-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 18px;}
+        .bg-blue { background: #0e2a3b; color: #4facfe;}
+        .bg-purple { background: #2b1433; color: #b84dfe;}
+        .nav-text-box { flex: 1; margin-left: 15px; }
+        .nav-title { font-weight: 600; font-size: 14px; margin-bottom: 3px;}
+        .nav-sub { font-size: 11px; color: var(--text-muted); }
 
         /* Bottom Navigation */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: flex; justify-content: space-around; padding: 12px 0 20px 0; border-top: 1px solid #222; z-index: 100; }
-        .nav-item { text-align: center; color: #555; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid #111; z-index: 100; }
+        .nav-item { text-align: center; color: #555; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: 500;}
         .nav-item.active { color: var(--accent); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        .nav-icon svg { width: 22px; height: 22px; fill: currentColor; }
 
-        /* Modals (Popups) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #0d1a17; width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; border: 1px solid var(--border); animation: slideUp 0.3s ease; }
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #0d1612; width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; border: 1px solid var(--border); animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px;}
-        .close-btn { cursor: pointer; color: #888; font-size: 20px; background: #1a1a1a; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%;}
+        .close-btn { cursor: pointer; color: #888; font-size: 18px; background: #1a1a1a; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%;}
         
-        .input-group { margin-bottom: 15px; text-align: left;}
-        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; }
-        .modal-input { width: 100%; padding: 14px; background: #000; color: #fff; border: 1px solid #333; border-radius: 10px; font-size: 14px; outline: none; }
+        .input-group { margin-bottom: 15px; }
+        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 500;}
+        .modal-input { width: 100%; padding: 15px; background: #060a08; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 14px; outline: none; }
         .modal-input:focus { border-color: var(--accent); }
-        .warning-text { font-size: 11px; color: #ffaa00; margin-bottom: 15px; line-height: 1.4; text-align: left;}
+        .warning-text { font-size: 11px; color: #ffaa00; margin-bottom: 20px; line-height: 1.5; }
         
-        /* History */
-        .history-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #222; }
+        .history-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #1a1a1a; }
         .history-user { font-weight: 600; font-size: 14px; }
-        .history-tx { font-size: 11px; color: #4facfe; margin-top: 4px; }
-        .history-amount { color: var(--accent); font-weight: 700; font-size: 14px; }
+        .history-tx { font-size: 11px; color: #4facfe; margin-top: 5px; display: flex; align-items: center; gap: 3px;}
+        .history-time { font-size: 10px; color: #555; margin-top: 5px; }
+        .history-amount { color: var(--accent); font-weight: 700; font-size: 14px; background: #0d2219; padding: 5px 10px; border-radius: 8px; height: fit-content;}
 
-        /* Invite Box */
-        .invite-box { background: #000; border: 1px solid #333; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .invite-link { font-size: 12px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80%;}
+        .invite-box { background: #060a08; border: 1px solid #333; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .invite-link { font-size: 12px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 85%;}
         .copy-icon { color: #888; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- App Header -->
+    <!-- Top Header -->
     <div class="app-header">
-        <div class="app-title">
-            <div class="app-logo">₮</div> USDT EARN MASTER
+        <div class="header-title">
+            <div class="header-logo">₮</div> USDT EARN PRO
         </div>
     </div>
 
-    <!-- User Info Header -->
-    <div class="user-header">
-        <div class="user-info">
+    <!-- Profile Section -->
+    <div class="profile-section">
+        <div class="user-left">
             <div class="avatar" id="user-avatar">U</div>
             <div>
                 <div class="user-name" id="user-name">Loading...</div>
                 <div class="user-status">Connected</div>
             </div>
         </div>
-        <div class="network-badge">₮ BEP-20</div>
+        <div class="user-right">
+            <div class="icon-btn">🔊</div>
+            <div class="network-badge">₮ BEP-20</div>
+        </div>
     </div>
 
-    <!-- ================= HOME PAGE ================= -->
-    <div id="page-home" class="page active">
-        <div class="card">
-            <div class="balance-label">Available USDT Balance</div>
-            <div class="balance-amount" id="main-balance">0.000 <span>USDT</span></div>
-            <div class="usd-value">≈ Real USD Value: $0.00 USD</div>
-            <div class="action-buttons">
-                <button class="btn" onclick="openWithdrawModal()">↑ Withdraw</button>
-                <button class="btn btn-outline" onclick="openHistoryModal()">↺ History</button>
-            </div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-box" onclick="switchTab('wallet')">
-                <div class="stat-icon">₮</div><div class="stat-title">Balance</div><div class="stat-value" id="stat-balance">0.000 USDT</div>
-            </div>
-            <div class="stat-box" onclick="switchTab('invite')">
-                <div class="stat-icon">👑</div><div class="stat-title">Referrals</div><div class="stat-value">0 Friends</div>
-            </div>
-            <div class="stat-box" onclick="switchTab('missions')">
-                <div class="stat-icon">🛡️</div><div class="stat-title">Missions</div><div class="stat-value">0 Completed</div>
-            </div>
-        </div>
-
-        <div class="list-card" style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <div style="color: #ffaa00; font-size: 12px; font-weight: 700; margin-bottom: 5px;">🔥 WATCH & EARN</div>
-                <div style="font-weight: 600; font-size: 15px;">Watch Ad · +0.001 USDT</div>
-                <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">Ads for next withdraw: 3/3</div>
-            </div>
-            <button class="btn-small" style="padding: 12px 20px; font-size: 14px;" onclick="alert('Ad system coming soon!')">▶ Watch Ad</button>
-        </div>
-
-        <div class="list-card" onclick="switchTab('missions')" style="cursor: pointer;">
-            <h3 style="margin-bottom: 8px; font-size: 16px;">Explore & Earn USDT</h3>
-            <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px;">Complete verified missions to unlock instant rewards and USDT (BEP-20) payouts.</p>
-            <button class="btn" style="width: auto; padding: 10px 15px; font-size: 13px;">Start Missions →</button>
-        </div>
-
-        <div class="list-card">
-            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">Quick Navigation</div>
-            <div class="mission-item" onclick="switchTab('missions')" style="margin-bottom: 10px;">
-                <div>
-                    <div class="mission-title">📋 Verified Missions</div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Subscribe to partner channels</div>
+    <div class="container">
+        <!-- ================= HOME PAGE ================= -->
+        <div id="page-home" class="page active">
+            <div class="main-balance-card">
+                <div class="balance-top">
+                    <div class="balance-label">Available USDT Balance</div>
+                    <div class="rate-badge">1 USDT ≈ $1.00</div>
                 </div>
-                <div style="color: #888;">›</div>
-            </div>
-            <div class="mission-item" onclick="switchTab('invite')" style="margin-bottom: 0;">
-                <div>
-                    <div class="mission-title">🎁 Affiliate Program</div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Invite friends & earn bonus</div>
+                <div class="balance-amount" id="main-balance">0.000 <span>USDT</span></div>
+                <div class="usd-row">
+                    <span>≈ Real USD Value: $0.00 USD</span>
+                    <span>🔒 BNB Smart Chain</span>
                 </div>
-                <div style="color: #888;">›</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MISSIONS PAGE ================= -->
-    <div id="page-missions" class="page">
-        <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent);">MISSIONS</h3>
-        
-        <div class="mission-item">
-            <div>
-                <div class="mission-title">SPONSORS3X</div>
-                <div class="mission-reward">+0.010 USDT</div>
-            </div>
-            <button class="btn-small btn-claimed">Claimed 🏆</button>
-        </div>
-        <div class="mission-item">
-            <div>
-                <div class="mission-title">SPONSORS6X</div>
-                <div class="mission-reward">+0.007 USDT</div>
-            </div>
-            <button class="btn-small" onclick="alert('Joining channel...')">Join</button>
-        </div>
-        <div class="mission-item">
-            <div>
-                <div class="mission-title">JOIN BOT 0.03 INSTANT</div>
-                <div class="mission-reward">+0.010 USDT</div>
-            </div>
-            <button class="btn-small" onclick="alert('Starting bot...')">Start</button>
-        </div>
-    </div>
-
-    <!-- ================= INVITE PAGE ================= -->
-    <div id="page-invite" class="page">
-        <div class="list-card">
-            <h3 style="margin-bottom: 10px;">Invite & Earn 🎁</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Grow the community using your personal Mini App link.</p>
-            
-            <div style="border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
-                <div style="color: var(--accent); font-size: 12px; font-weight: 700; margin-bottom: 5px;">⚡ Verified Referral Milestone</div>
-                <div style="font-weight: 600; font-size: 14px; margin-bottom: 10px;">Earn +0.050 USDT per verified friend</div>
-                <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">When a friend joins via your referral link, you receive an instant bot alert and they appear below as Processing. As soon as they complete 100% of all active missions, their status upgrades to Completed.</p>
+                <div class="action-buttons">
+                    <button class="btn" onclick="openWithdrawModal()">↑ Withdraw</button>
+                    <button class="btn btn-outline" onclick="openHistoryModal()">↺ History</button>
+                </div>
             </div>
 
-            <div class="invite-box">
-                <div class="invite-link" id="ref-link">https://t.me/...</div>
-                <div class="copy-icon" onclick="copyLink()">📋</div>
+            <div class="stats-grid">
+                <div class="stat-box" onclick="switchTab('wallet')">
+                    <div class="stat-icon">₮</div>
+                    <div class="stat-title">Balance</div>
+                    <div class="stat-value" id="stat-balance">0.000 USDT</div>
+                </div>
+                <div class="stat-box" onclick="switchTab('invite')">
+                    <div class="stat-icon" style="color: #ffaa00; background: #332200;">👑</div>
+                    <div class="stat-title">Referrals</div>
+                    <div class="stat-value">0 Friends</div>
+                </div>
+                <div class="stat-box" onclick="switchTab('missions')">
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-title">Missions</div>
+                    <div class="stat-value">0 Completed</div>
+                </div>
             </div>
-            <button class="btn" onclick="shareLink()">Share Invite Link on Telegram</button>
-        </div>
-    </div>
 
-    <!-- ================= WALLET PAGE ================= -->
-    <div id="page-wallet" class="page">
-        <div class="card">
-            <div class="balance-label">Estimated Portfolio Value</div>
-            <div class="balance-amount">$0.00</div>
-            <div style="background: #000; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; font-size: 13px; margin-bottom: 20px;">
-                <span style="color: var(--accent);">₮</span> 0.000 USDT
+            <div class="card watch-card">
+                <div>
+                    <div class="watch-title">🔥 WATCH & EARN</div>
+                    <div class="watch-text">Watch Ad · +0.001 USDT</div>
+                    <div class="watch-sub">Ads for next withdraw: 3/3</div>
+                </div>
+                <button class="btn" style="width: auto; padding: 12px 18px; font-size: 13px;" onclick="alert('Ad system coming soon!')">▶ Watch Ad</button>
             </div>
-            <div class="action-buttons">
-                <button class="btn" onclick="openWithdrawModal()">↑ Withdraw</button>
-                <button class="btn btn-outline" onclick="openHistoryModal()">↺ Activity Log</button>
+
+            <div class="card explore-card" onclick="switchTab('missions')" style="cursor: pointer;">
+                <div class="explore-left">
+                    <div class="explore-title">Explore & Earn USDT</div>
+                    <div class="explore-text">Complete verified missions to unlock instant rewards and USDT (BEP-20) payouts.</div>
+                    <button class="btn" style="width: auto; padding: 10px 15px; font-size: 13px;">Start Missions →</button>
+                </div>
+                <div class="explore-icon">₮</div>
+            </div>
+
+            <div class="quick-nav">
+                <div class="quick-title">QUICK NAVIGATION</div>
+                <div class="nav-item-card" onclick="switchTab('missions')">
+                    <div class="nav-icon-box bg-blue">📋</div>
+                    <div class="nav-text-box">
+                        <div class="nav-title">Verified Missions</div>
+                        <div class="nav-sub">Subscribe to partner channels & earn USDT</div>
+                    </div>
+                    <div style="color: #555;">›</div>
+                </div>
+                <div class="nav-item-card" onclick="switchTab('invite')">
+                    <div class="nav-icon-box bg-purple">🎁</div>
+                    <div class="nav-text-box">
+                        <div class="nav-title">Affiliate Program</div>
+                        <div class="nav-sub">Invite friends & earn bonus when they finish tasks</div>
+                    </div>
+                    <div style="color: #555;">›</div>
+                </div>
             </div>
         </div>
 
-        <div class="list-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">WITHDRAWAL REQUESTS</div>
-                <div style="color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
+        <!-- ================= MISSIONS PAGE ================= -->
+        <div id="page-missions" class="page">
+            <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 700; letter-spacing: 1px;">MISSIONS</h3>
+            <div class="quick-nav">
+                <div class="nav-item-card">
+                    <div class="nav-icon-box bg-blue">✈️</div>
+                    <div class="nav-text-box">
+                        <div class="nav-title">SPONSORS3X</div>
+                        <div class="nav-sub" style="color: var(--accent);">+0.010 USDT</div>
+                    </div>
+                    <button class="btn btn-outline" style="width: auto; padding: 8px 15px; font-size: 12px; border-color: var(--border); color: var(--accent);">Claimed 🏆</button>
+                </div>
+                <div class="nav-item-card">
+                    <div class="nav-icon-box bg-blue">✈️</div>
+                    <div class="nav-text-box">
+                        <div class="nav-title">SPONSORS6X</div>
+                        <div class="nav-sub" style="color: var(--accent);">+0.007 USDT</div>
+                    </div>
+                    <button class="btn" style="width: auto; padding: 8px 15px; font-size: 12px;" onclick="alert('Joining...')">Join</button>
+                </div>
+                <div class="nav-item-card">
+                    <div class="nav-icon-box bg-blue">✈️</div>
+                    <div class="nav-text-box">
+                        <div class="nav-title">JOIN BOT 0.03 INSTANT</div>
+                        <div class="nav-sub" style="color: var(--accent);">+0.010 USDT</div>
+                    </div>
+                    <button class="btn" style="width: auto; padding: 8px 15px; font-size: 12px;" onclick="alert('Starting...')">Start</button>
+                </div>
             </div>
-            <div style="text-align: center; padding: 20px 0;">
-                <div style="font-size: 30px; color: #333; margin-bottom: 10px;">⏱</div>
-                <div style="font-weight: 600; font-size: 14px;">No Withdrawals Recorded</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT (BEP-20) payout history will appear here</div>
+        </div>
+
+        <!-- ================= INVITE PAGE ================= -->
+        <div id="page-invite" class="page">
+            <div class="main-balance-card" style="padding: 20px;">
+                <div class="explore-title" style="margin-bottom: 5px;">Invite & Earn 🎁</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Grow the community using your personal Mini App link.</p>
+                
+                <div style="border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 20px; background: #0b1410;">
+                    <div style="color: var(--accent); font-size: 11px; font-weight: 700; margin-bottom: 5px;">⚡ Verified Referral Milestone</div>
+                    <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Earn +0.050 USDT per verified friend</div>
+                    <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">When a friend joins via your referral link, you receive an instant bot alert and they appear below as Processing. As soon as they complete 100% of all active missions, their status upgrades to Completed.</p>
+                </div>
+
+                <div class="invite-box">
+                    <div class="invite-link" id="ref-link">https://t.me/...</div>
+                    <div class="copy-icon" onclick="copyLink()">📋</div>
+                </div>
+                <button class="btn" onclick="shareLink()">Share Invite Link on Telegram</button>
+            </div>
+        </div>
+
+        <!-- ================= WALLET PAGE ================= -->
+        <div id="page-wallet" class="page">
+            <div class="main-balance-card">
+                <div class="balance-label" style="text-align: center; margin-bottom: 10px;">Estimated Portfolio Value</div>
+                <div class="balance-amount" style="justify-content: center; font-size: 36px;">$0.00</div>
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <span style="background: #000; border: 1px solid #333; padding: 5px 12px; border-radius: 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
+                        <span style="color: var(--accent);">₮</span> 0.000 USDT
+                    </span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" onclick="openWithdrawModal()">↑ Withdraw</button>
+                    <button class="btn btn-outline" onclick="openHistoryModal()">↺ Activity Log</button>
+                </div>
+            </div>
+
+            <div class="quick-nav">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="quick-title" style="margin: 0;">WITHDRAWAL REQUESTS</div>
+                    <div style="color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
+                </div>
+                <div style="text-align: center; padding: 30px 0;">
+                    <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
+                    <div style="font-weight: 600; font-size: 14px;">No Withdrawals Recorded</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT (BEP-20) payout history will appear here</div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- ================= BOTTOM NAVIGATION ================= -->
     <div class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div>Home</div></div>
-        <div class="nav-item" id="nav-missions" onclick="switchTab('missions')"><div class="nav-icon">✅</div><div>Missions</div></div>
-        <div class="nav-item" id="nav-invite" onclick="switchTab('invite')"><div class="nav-icon">👥</div><div>Invite</div></div>
-        <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet')"><div class="nav-icon">💼</div><div>Wallet</div></div>
+        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+            <div class="nav-icon">🏠</div><div>Home</div>
+        </div>
+        <div class="nav-item" id="nav-missions" onclick="switchTab('missions')">
+            <div class="nav-icon">✅</div><div>Missions</div>
+        </div>
+        <div class="nav-item" id="nav-invite" onclick="switchTab('invite')">
+            <div class="nav-icon">👥</div><div>Invite</div>
+        </div>
+        <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet')">
+            <div class="nav-icon">💼</div><div>Wallet</div>
+        </div>
     </div>
 
     <!-- ================= WITHDRAW MODAL ================= -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title"><div class="app-logo">₮</div> Withdraw USDT (BEP-20)</div>
+                <div class="modal-title"><div class="header-logo">₮</div> Withdraw USDT (BEP-20)</div>
                 <div class="close-btn" onclick="closeModal('withdrawModal')">✕</div>
             </div>
-            
             <div class="input-group">
                 <label class="input-label">BEP-20 Wallet Address (BNB Smart Chain)</label>
                 <input type="text" class="modal-input" placeholder="0xB204c47b...d23">
@@ -284,12 +339,10 @@
                 <label class="input-label">Amount (USDT)</label>
                 <input type="number" class="modal-input" placeholder="0.05">
             </div>
-            
             <div class="warning-text">
                 Min 0.01 · Max 0.5 USDT · Fee 30% · Ads 3/3 · Active referrals 0/10<br><br>
                 ⚠️ Only send to a BEP-20 (BSC) address. Wrong network = lost funds.
             </div>
-            
             <button class="btn" onclick="alert('Withdrawal request submitted!')">Confirm Cashout</button>
         </div>
     </div>
@@ -301,13 +354,12 @@
                 <div class="modal-title">Verified On-Chain Payouts</div>
                 <div class="close-btn" onclick="closeModal('historyModal')">✕</div>
             </div>
-            
             <div style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
                 <div class="history-item">
                     <div>
                         <div class="history-user">@Raisa_fx</div>
                         <div class="history-tx">TX: 0x69137c...58cd8f ↗</div>
-                        <div style="font-size: 10px; color: #555; margin-top: 4px;">11/13/2026, 3:12:25 PM</div>
+                        <div class="history-time">11/13/2026, 3:12:25 PM</div>
                     </div>
                     <div class="history-amount">+0.105 USDT</div>
                 </div>
@@ -315,7 +367,7 @@
                     <div>
                         <div class="history-user">@Globalairdropmanager</div>
                         <div class="history-tx">TX: 0x47eb1b...92c8d3 ↗</div>
-                        <div style="font-size: 10px; color: #555; margin-top: 4px;">11/13/2026, 11:02:24 AM</div>
+                        <div class="history-time">11/13/2026, 11:02:24 AM</div>
                     </div>
                     <div class="history-amount">+0.070 USDT</div>
                 </div>
@@ -323,7 +375,7 @@
                     <div>
                         <div class="history-user">@CrayonFuad88</div>
                         <div class="history-tx">TX: 0xff9bbe...9f993d ↗</div>
-                        <div style="font-size: 10px; color: #555; margin-top: 4px;">11/12/2026, 11:05:46 PM</div>
+                        <div class="history-time">11/12/2026, 11:05:46 PM</div>
                     </div>
                     <div class="history-amount">+0.020 USDT</div>
                 </div>
@@ -335,7 +387,6 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
-        // Set User Data
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.getElementById('user-name').innerText = user.first_name;
@@ -345,22 +396,19 @@
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot`;
         }
 
-        // Tab Switching Logic
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
             document.getElementById('page-' + tabId).classList.add('active');
             document.getElementById('nav-' + tabId).classList.add('active');
-            window.scrollTo(0,0); // Scroll to top on tab change
+            window.scrollTo(0,0); 
         }
 
-        // Modal Logic
         function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
         function openHistoryModal() { document.getElementById('historyModal').style.display = 'flex'; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
-        // Share & Copy Logic
         function copyLink() {
             const link = document.getElementById('ref-link').innerText;
             navigator.clipboard.writeText(link).then(() => {
@@ -370,7 +418,7 @@
 
         function shareLink() {
             const link = document.getElementById('ref-link').innerText;
-            const text = encodeURIComponent("Join USDT EARN MASTER and earn real crypto daily!");
+            const text = encodeURIComponent("Join USDT EARN PRO and earn real crypto daily!");
             tg.openTelegramLink(`https://t.me/share/url?url=${link}&text=${text}`);
         }
     </script>
