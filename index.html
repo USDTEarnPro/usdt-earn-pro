@@ -187,7 +187,7 @@
                 </div>
                 <div class="balance-amount" id="main-balance">0.000 <span>USDT</span></div>
                 <div class="usd-row">
-                    <span>≈ Real USD Value: $0.00 USD</span>
+                    <span id="main-usd">≈ Real USD Value: $0.00 USD</span>
                     <span>🔒 BNB Smart Chain</span>
                 </div>
                 <div class="action-buttons">
@@ -205,12 +205,6 @@
                             <circle cx="50" cy="50" r="30" fill="#1a8d5a" />
                             <path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" />
                             <ellipse cx="50" cy="55" rx="22" ry="8" stroke="#ffffff" stroke-width="2" fill="none" />
-                            <defs>
-                                <linearGradient id="usdtBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#0f3d28" />
-                                    <stop offset="100%" stop-color="#05150d" />
-                                </linearGradient>
-                            </defs>
                         </svg>
                     </div>
                     <div class="stat-title">Balance</div>
@@ -360,7 +354,7 @@
                 <div style="text-align: center; margin-bottom: 25px;">
                     <span style="background: #000; border: 1px solid #333; padding: 6px 14px; border-radius: 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
                         <svg width="14" height="14" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#26A17B"/><path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" /></svg>
-                        0.000 USDT
+                        <span id="wallet-usdt">0.000 USDT</span>
                     </span>
                 </div>
                 <div class="action-buttons">
@@ -457,18 +451,17 @@
         
         let userId = null;
         let currentBalance = 0.000;
-        let userRefs = 0; // ডেমো রেফারেল কাউন্ট
+        let userRefs = 0; // রেফারেল কাউন্ট ট্র্যাকিং
 
         const user = tg.initDataUnsafe?.user;
         if (user) {
             userId = user.id;
-            // পুরো নাম এবং ইউজারনেম দেখানো
             document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             document.getElementById('user-username').innerText = user.username ? '@' + user.username : '';
             document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot?start=${user.id}`;
             
-            // সার্ভার থেকে ডাটা লোড করা (আপনার main.py এর সাথে কানেক্টেড)
+            // লোড ডাটা
             fetch('/api/get_user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -477,8 +470,10 @@
             .then(res => res.json())
             .then(data => {
                 currentBalance = data.balance;
+                userRefs = data.refs || 0;
                 updateBalanceUI(currentBalance);
                 document.getElementById('mission-count').innerText = `${data.missions} Completed`;
+                document.getElementById('ref-count').innerText = `${userRefs} Friends`;
 
                 if(data.joined === 1) {
                     document.getElementById('join-btn').style.display = 'none';
@@ -490,10 +485,16 @@
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot`;
         }
 
+        // ফাংশন আপডেট: সব জায়গায় ব্যালেন্স সিঙ্ক করা
         function updateBalanceUI(bal) {
+            // Home Page
             document.getElementById('main-balance').innerHTML = `${bal.toFixed(3)} <span>USDT</span>`;
+            document.getElementById('main-usd').innerText = `≈ Real USD Value: $${bal.toFixed(2)} USD`;
             document.getElementById('stat-balance').innerText = `${bal.toFixed(3)} USDT`;
+            
+            // Wallet Page
             document.getElementById('wallet-balance').innerText = `$${bal.toFixed(2)}`;
+            document.getElementById('wallet-usdt').innerText = `${bal.toFixed(3)} USDT`;
         }
 
         function switchTab(tabId) {
