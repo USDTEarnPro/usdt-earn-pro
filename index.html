@@ -6,29 +6,171 @@
     <title>USDT EARN PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background-color: #0b141a; color: white; font-family: Arial, sans-serif; margin: 0; padding: 20px; text-align: center; }
-        .card { background: linear-gradient(145deg, #11241f, #0d1a17); border: 1px solid #1f4a3d; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
-        h1 { color: #00ff88; font-size: 24px; }
-        .balance { font-size: 36px; font-weight: bold; }
-        .btn { background-color: #00ff88; color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        :root { --bg: #0b141a; --card-bg: #11241f; --text: #ffffff; --accent: #00ff88; --border: #1f4a3d; }
+        body { background-color: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; padding-bottom: 80px; }
+        .app-header { background: #000; padding: 15px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+        .app-logo { width: 30px; height: 30px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; font-weight: bold; }
+        .app-title { font-size: 20px; font-weight: bold; color: var(--accent); letter-spacing: 1px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--accent); }
+        .page { display: none; padding: 20px; }
+        .page.active { display: block; }
+        .card { background: linear-gradient(145deg, #11241f, #0d1a17); border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 15px; text-align: center; }
+        .balance { font-size: 36px; font-weight: bold; margin: 10px 0; color: var(--accent); }
+        .btn { background-color: var(--accent); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-outline { background-color: transparent; color: var(--text); border: 1px solid #444; }
+        .nav-card { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); cursor: pointer; text-align: left;}
+        .stats-container { display: flex; gap: 10px; margin-bottom: 15px; }
+        .stat-card { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; }
+        .stat-icon { font-size: 24px; margin-bottom: 5px; }
+        .stat-title { font-weight: bold; font-size: 14px; }
+        .stat-value { color: #888; font-size: 12px; margin-top: 3px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { color: var(--accent); }
+        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #1a1a1a; width: 90%; max-width: 400px; border-radius: 15px; padding: 20px; border: 1px solid #333; }
+        .modal-input { width: 90%; padding: 12px; margin: 10px 0; background: #000; color: #fff; border: 1px solid #444; border-radius: 8px; }
+        .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #333; font-size: 14px; }
     </style>
 </head>
 <body>
-    <h1>USDT EARN PRO</h1>
-    <div class="card">
-        <p>Available USDT Balance</p>
-        <div class="balance" id="user-balance">0.053 USDT</div>
-        <button class="btn" onclick="withdraw()">Withdraw</button>
+    <div class="app-header">
+        <div class="app-logo">₮</div>
+        <div class="app-title">USDT EARN PRO</div>
     </div>
-    <div class="card">
-        <h3>Watch & Earn</h3>
-        <button class="btn" onclick="watchAd()">Watch Ad (+0.001 USDT)</button>
+    <div class="header">
+        <div class="user-info">
+            <div class="avatar" id="user-avatar">U</div>
+            <div>
+                <div style="font-weight: bold;" id="user-name">Loading...</div>
+                <div style="font-size: 12px; color: var(--accent);">● Connected</div>
+            </div>
+        </div>
+        <div style="font-weight: bold; color: var(--accent); font-size: 14px;">BEP-20</div>
     </div>
+
+    <div id="page-home" class="page active">
+        <div class="card">
+            <div style="font-size: 14px; color: #aaa;">AVAILABLE USDT BALANCE</div>
+            <div class="balance" id="main-balance">0.053 USDT</div>
+            <div style="font-size: 12px; color: #888; margin-bottom: 15px;">≈ Real USD Value: $0.05 USD</div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" style="flex: 1;" onclick="openWithdrawModal()">↑ Withdraw</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="openHistoryModal()">↺ History</button>
+            </div>
+        </div>
+        <div class="stats-container">
+            <div class="stat-card" onclick="switchTab('wallet')"><div class="stat-icon">₮</div><div class="stat-title">Balance</div><div class="stat-value">0.053 USDT</div></div>
+            <div class="stat-card" onclick="switchTab('invite')"><div class="stat-icon">👑</div><div class="stat-title">Referrals</div><div class="stat-value">0 Friends</div></div>
+            <div class="stat-card" onclick="switchTab('missions')"><div class="stat-icon">🛡️</div><div class="stat-title">Missions</div><div class="stat-value">5 Completed</div></div>
+        </div>
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; text-align: left; border-color: #ffaa00;">
+            <div>
+                <div style="color: #ffaa00; font-size: 12px; font-weight: bold;">🔥 WATCH & EARN</div>
+                <div style="font-weight: bold; margin: 5px 0;">Watch Ad · +0.001 USDT</div>
+            </div>
+            <button class="btn" style="padding: 10px 15px;" onclick="alert('Ad system coming soon!')">▶ Watch Ad</button>
+        </div>
+        <div class="card" style="text-align: left;" onclick="switchTab('missions')">
+            <h3 style="margin-top: 0;">Explore & Earn USDT</h3>
+            <p style="font-size: 12px; color: #888;">Complete verified missions to unlock instant rewards.</p>
+            <button class="btn" style="width: auto;">Start Missions →</button>
+        </div>
+        <div class="card" style="text-align: left;">
+            <div style="font-size: 12px; color: #888; font-weight: bold; margin-bottom: 10px;">QUICK NAVIGATION</div>
+            <div class="nav-card" onclick="switchTab('missions')"><div>📋 <b>Verified Missions</b><br><span style="font-size: 12px; color: #888;">Subscribe & earn</span></div><div>›</div></div>
+            <div class="nav-card" onclick="switchTab('invite')"><div>🎁 <b>Affiliate Program</b><br><span style="font-size: 12px; color: #888;">Invite friends</span></div><div>›</div></div>
+        </div>
+    </div>
+
+    <div id="page-missions" class="page">
+        <h3 style="text-align: center; color: var(--accent);">MISSIONS</h3>
+        <div class="nav-card"><div><b>SPONSORS3X</b><br><span style="color: var(--accent); font-size: 12px;">+0.010 USDT</span></div><button class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);">Claimed 🏆</button></div>
+        <div class="nav-card"><div><b>SPONSORS6X</b><br><span style="color: var(--accent); font-size: 12px;">+0.007 USDT</span></div><button class="btn" onclick="alert('Joining channel...')">Join</button></div>
+        <div class="nav-card"><div><b>JOIN BOT 0.03 INSTANT</b><br><span style="color: var(--accent); font-size: 12px;">+0.010 USDT</span></div><button class="btn" onclick="alert('Starting bot...')">Start</button></div>
+    </div>
+
+    <div id="page-invite" class="page">
+        <div class="card" style="text-align: left;">
+            <h3 style="margin-top:0;">Invite & Earn 🎁</h3>
+            <p style="font-size: 12px; color: #888;">Earn +0.050 USDT per verified friend.</p>
+            <input type="text" id="ref-link" readonly class="modal-input" style="width: 90%;">
+            <button class="btn" style="width: 100%; margin-top: 5px;" onclick="shareLink()">Share Invite Link</button>
+        </div>
+    </div>
+
+    <div id="page-wallet" class="page">
+        <div class="card">
+            <div style="font-size: 12px; color: #888;">ESTIMATED PORTFOLIO VALUE</div>
+            <div class="balance">$0.05</div>
+            <div style="background: #000; padding: 5px 10px; border-radius: 20px; display: inline-block; font-size: 12px;">₮ 0.053 USDT</div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn" style="flex: 1;" onclick="openWithdrawModal()">↑ Withdraw</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="openHistoryModal()">↺ Activity Log</button>
+            </div>
+        </div>
+        <div class="card"><h3 style="margin-top:0; font-size: 16px;">WITHDRAWAL REQUESTS</h3><p style="color: #888; font-size: 12px; text-align: center;">No Withdrawals Recorded</p></div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-home" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div>Home</div></div>
+        <div class="nav-item" id="nav-missions" onclick="switchTab('missions')"><div class="nav-icon">✅</div><div>Missions</div></div>
+        <div class="nav-item" id="nav-invite" onclick="switchTab('invite')"><div class="nav-icon">👥</div><div>Invite</div></div>
+        <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet')"><div class="nav-icon">💼</div><div>Wallet</div></div>
+    </div>
+
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <b>₮ Withdraw USDT (BEP-20)</b>
+                <span style="cursor: pointer; color: red;" onclick="closeModal('withdrawModal')">✕</span>
+            </div>
+            <div style="font-size: 12px; color: #888;">BEP-20 Wallet Address</div>
+            <input type="text" class="modal-input" placeholder="0x1234...abcd">
+            <div style="font-size: 12px; color: #888;">Amount (USDT)</div>
+            <input type="number" class="modal-input" placeholder="0.500">
+            <div style="font-size: 11px; color: #ffaa00; margin-bottom: 10px;">⚠️ Min 0.01 · Max 0.5 USDT</div>
+            <button class="btn" style="width: 100%;" onclick="alert('Withdrawal request submitted!')">Confirm Cashout</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <b>Verified On-Chain Payouts</b>
+                <span style="cursor: pointer; color: red;" onclick="closeModal('historyModal')">✕</span>
+            </div>
+            <div class="history-item"><div><b>@Raisa_fx</b><br><span style="font-size: 10px; color: #4facfe;">TX: 0x69137c...58cd8f</span></div><div style="color: var(--accent); font-weight: bold;">+0.105 USDT</div></div>
+            <div class="history-item"><div><b>@Globalairdropmanager</b><br><span style="font-size: 10px; color: #4facfe;">TX: 0x47eb1b...92c8d3</span></div><div style="color: var(--accent); font-weight: bold;">+0.070 USDT</div></div>
+            <div class="history-item"><div><b>@Riyan577</b><br><span style="font-size: 10px; color: #4facfe;">TX: 0x112233...aabbcc</span></div><div style="color: var(--accent); font-weight: bold;">+0.020 USDT</div></div>
+        </div>
+    </div>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        function withdraw() { alert("Withdraw coming soon!"); }
-        function watchAd() { alert("Ad system coming soon!"); }
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('user-name').innerText = user.first_name;
+            document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
+            document.getElementById('ref-link').value = `https://t.me/EarnUSDTProBot?start=${user.id}`;
+        }
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+        }
+        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
+        function openHistoryModal() { document.getElementById('historyModal').style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function shareLink() {
+            const link = document.getElementById('ref-link').value;
+            tg.openTelegramLink(`https://t.me/share/url?url=${link}&text=Join USDT EARN PRO and earn real crypto!`);
+        }
     </script>
 </body>
 </html>
