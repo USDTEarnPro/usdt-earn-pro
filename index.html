@@ -5,34 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>USDT EARN PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Adsgram Script -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #040806; 
-            --card-bg: rgba(13, 26, 21, 0.8); 
-            --text: #ffffff; 
-            --accent: #00ff88; 
-            --border: rgba(0, 255, 136, 0.15); 
-            --text-muted: #7a8f86;
-        }
+        :root { --bg: #040806; --card-bg: rgba(13, 26, 21, 0.8); --text: #ffffff; --accent: #00ff88; --border: rgba(0, 255, 136, 0.15); --text-muted: #7a8f86; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            padding-bottom: 90px; 
-            -webkit-tap-highlight-color: transparent;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.1) 0%, transparent 60%),
-                radial-gradient(circle at 100% 100%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
-            background-attachment: fixed;
-        }
+        body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; -webkit-tap-highlight-color: transparent; background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.1) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(0, 255, 136, 0.05) 0%, transparent 50%); background-attachment: fixed; }
         
-        /* Top Header */
         .app-header { display: flex; justify-content: center; align-items: center; padding: 16px; background: rgba(4, 8, 6, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;}
         .header-title { font-size: 18px; font-weight: 800; letter-spacing: 1.5px; display: flex; align-items: center; gap: 10px; color: var(--accent); text-shadow: 0 0 15px rgba(0,255,136,0.4);}
         .header-logo { width: 26px; height: 26px; }
 
-        /* Profile Section */
         .profile-section { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
         .user-left { display: flex; align-items: center; gap: 14px; }
         .avatar { width: 52px; height: 52px; border-radius: 50%; background: #000; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent); font-size: 22px; box-shadow: 0 0 15px rgba(0,255,136,0.2); }
@@ -44,21 +28,12 @@
         .icon-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .network-badge { background: rgba(0,255,136,0.05); border: 1px solid var(--border); color: var(--accent); padding: 7px 14px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px; font-weight: 700;}
 
-        /* Main Container */
         .container { padding: 0 20px; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Balance Card */
-        .main-balance-card { 
-            background: linear-gradient(160deg, rgba(15, 30, 24, 0.9) 0%, rgba(5, 10, 8, 0.9) 100%); 
-            border: 1px solid var(--border); 
-            border-top: 1px solid rgba(0, 255, 136, 0.4);
-            border-radius: 24px; padding: 25px 22px; margin-bottom: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            position: relative; overflow: hidden;
-        }
+        .main-balance-card { background: linear-gradient(160deg, rgba(15, 30, 24, 0.9) 0%, rgba(5, 10, 8, 0.9) 100%); border: 1px solid var(--border); border-top: 1px solid rgba(0, 255, 136, 0.4); border-radius: 24px; padding: 25px 22px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
         .balance-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
         .balance-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
         .rate-badge { font-size: 10px; border: 1px solid var(--border); padding: 5px 10px; border-radius: 10px; color: var(--accent); background: rgba(0,255,136,0.05); font-weight: 700;}
@@ -67,17 +42,10 @@
         .usd-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; font-weight: 500;}
         
         .action-buttons { display: flex; gap: 12px; }
-        .btn { 
-            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%); 
-            color: #000; border: none; padding: 15px 20px; border-radius: 14px; 
-            font-weight: 800; cursor: pointer; font-size: 14px; width: 100%; 
-            display: flex; justify-content: center; align-items: center; gap: 8px; 
-            transition: 0.2s; box-shadow: 0 5px 20px rgba(0, 255, 136, 0.25);
-        }
+        .btn { background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%); color: #000; border: none; padding: 15px 20px; border-radius: 14px; font-weight: 800; cursor: pointer; font-size: 14px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 5px 20px rgba(0, 255, 136, 0.25); }
         .btn:active { transform: scale(0.96); }
         .btn-outline { background: rgba(255,255,255,0.03); color: var(--text); border: 1px solid rgba(255,255,255,0.1); box-shadow: none;}
         
-        /* 3 Stats Boxes */
         .stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
         .stat-box { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(10px); transition: 0.2s;}
         .stat-box:active { transform: scale(0.95); border-color: var(--accent);}
@@ -85,7 +53,6 @@
         .stat-title { font-weight: 700; font-size: 13px; color: #fff;}
         .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; font-weight: 500;}
 
-        /* Cards & Lists */
         .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px);}
         .watch-card { display: flex; justify-content: space-between; align-items: center; border-color: rgba(255, 170, 0, 0.2); background: linear-gradient(145deg, #18140a, #0a0906);}
         .watch-title { color: #ffaa00; font-size: 11px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px;}
@@ -110,14 +77,12 @@
         .nav-title { font-weight: 700; font-size: 14px; margin-bottom: 3px;}
         .nav-sub { font-size: 11px; color: var(--text-muted); font-weight: 500;}
 
-        /* Bottom Navigation */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(4, 8, 6, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid #111; z-index: 100; }
         .nav-item { text-align: center; color: #4a5b54; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: 600;}
         .nav-item.active { color: var(--accent); text-shadow: 0 0 10px rgba(0,255,136,0.4);}
         .nav-icon { font-size: 24px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;}
         .nav-icon svg { width: 26px; height: 26px; fill: currentColor; }
 
-        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: linear-gradient(160deg, #0d1814, #060a08); width: 90%; max-width: 400px; border-radius: 24px; padding: 25px; border: 1px solid var(--border); animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.8);}
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -138,10 +103,8 @@
 </head>
 <body>
 
-    <!-- Top Header -->
     <div class="app-header">
         <div class="header-title">
-            <!-- SVG Premium USDT 3D Logo -->
             <svg class="header-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#usdtBg)" stroke="#00ff88" stroke-width="2"/>
                 <circle cx="50" cy="50" r="30" fill="#1a8d5a" />
@@ -158,7 +121,6 @@
         </div>
     </div>
 
-    <!-- Profile Section -->
     <div class="profile-section">
         <div class="user-left">
             <div class="avatar" id="user-avatar">U</div>
@@ -178,7 +140,6 @@
     </div>
 
     <div class="container">
-        <!-- ================= HOME PAGE ================= -->
         <div id="page-home" class="page active">
             <div class="main-balance-card">
                 <div class="balance-top">
@@ -199,7 +160,6 @@
             <div class="stats-grid">
                 <div class="stat-box" onclick="switchTab('wallet')">
                     <div class="stat-icon">
-                        <!-- USDT 3D -->
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#usdtBg)" stroke="#00ff88" stroke-width="2"/>
                             <circle cx="50" cy="50" r="30" fill="#1a8d5a" />
@@ -212,7 +172,6 @@
                 </div>
                 <div class="stat-box" onclick="switchTab('invite')">
                     <div class="stat-icon">
-                        <!-- Gold Crown 3D -->
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#crownBg)" stroke="#d4af37" stroke-width="2"/>
                             <path d="M30 65 L70 65 L75 40 L60 50 L50 30 L40 50 L25 40 Z" fill="url(#goldGrad)" />
@@ -237,7 +196,6 @@
                 </div>
                 <div class="stat-box" onclick="switchTab('missions')">
                     <div class="stat-icon">
-                        <!-- Shield 3D -->
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#shieldBg)" stroke="#00ff88" stroke-width="2"/>
                             <path d="M50 25 L75 35 V55 C75 70 50 80 50 80 C50 80 25 70 25 55 V35 L50 25 Z" fill="url(#shieldGrad)" />
@@ -265,7 +223,8 @@
                     <div class="watch-text">Watch Ad · +0.001 USDT</div>
                     <div class="watch-sub">Ads for next withdraw: 3/3</div>
                 </div>
-                <button class="btn" style="width: auto; padding: 12px 18px; font-size: 13px;" onclick="alert('Ad system coming soon!')">▶ Watch</button>
+                <!-- Watch Ad Button calling watchAd() -->
+                <button class="btn" style="width: auto; padding: 12px 18px; font-size: 13px;" onclick="watchAd()">▶ Watch</button>
             </div>
 
             <div class="card explore-card" onclick="switchTab('missions')">
@@ -309,7 +268,6 @@
             </div>
         </div>
 
-        <!-- ================= MISSIONS PAGE ================= -->
         <div id="page-missions" class="page">
             <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(0,255,136,0.4);">MISSIONS</h3>
             <div class="quick-nav">
@@ -328,7 +286,6 @@
             </div>
         </div>
 
-        <!-- ================= INVITE PAGE ================= -->
         <div id="page-invite" class="page">
             <div class="main-balance-card" style="padding: 25px;">
                 <div class="explore-title" style="margin-bottom: 5px;">Invite & Earn 🎁</div>
@@ -346,7 +303,6 @@
             </div>
         </div>
 
-        <!-- ================= WALLET PAGE ================= -->
         <div id="page-wallet" class="page">
             <div class="main-balance-card">
                 <div class="balance-label" style="text-align: center; margin-bottom: 10px;">Estimated Portfolio Value</div>
@@ -376,35 +332,25 @@
         </div>
     </div>
 
-    <!-- ================= BOTTOM NAVIGATION ================= -->
     <div class="bottom-nav">
         <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            </div>
+            <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
             <div>Home</div>
         </div>
         <div class="nav-item" id="nav-missions" onclick="switchTab('missions')">
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            </div>
+            <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
             <div>Missions</div>
         </div>
         <div class="nav-item" id="nav-invite" onclick="switchTab('invite')">
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-            </div>
+            <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
             <div>Invite</div>
         </div>
         <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet')">
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            </div>
+            <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
             <div>Wallet</div>
         </div>
     </div>
 
-    <!-- ================= WITHDRAW MODAL ================= -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -430,7 +376,6 @@
         </div>
     </div>
 
-    <!-- ================= HISTORY MODAL ================= -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -451,9 +396,17 @@
         
         let userId = null;
         let currentBalance = 0.000;
-        let userRefs = 0; // রেফারেল কাউন্ট ট্র্যাকিং
+        let userRefs = 0;
+        
+        // Adsgram Setup (এখানে আপনার ব্লক আইডি বসাবেন)
+        const adController = window.Adsgram.init({ blockId: "আপনার_ব্লক_আইডি_এখানে_বসান" });
 
         const user = tg.initDataUnsafe?.user;
+        
+        // রেফারেল আইডি রিড করা
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrerId = urlParams.get('start') || null;
+
         if (user) {
             userId = user.id;
             document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
@@ -461,11 +414,15 @@
             document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot?start=${user.id}`;
             
-            // লোড ডাটা
+            // লোড ডাটা (রেফারার আইডিসহ)
             fetch('/api/get_user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, name: document.getElementById('user-name').innerText })
+                body: JSON.stringify({ 
+                    user_id: userId, 
+                    name: document.getElementById('user-name').innerText,
+                    referrer_id: referrerId 
+                })
             })
             .then(res => res.json())
             .then(data => {
@@ -485,14 +442,11 @@
             document.getElementById('ref-link').innerText = `https://t.me/EarnUSDTProBot`;
         }
 
-        // ফাংশন আপডেট: সব জায়গায় ব্যালেন্স সিঙ্ক করা
         function updateBalanceUI(bal) {
-            // Home Page
             document.getElementById('main-balance').innerHTML = `${bal.toFixed(3)} <span>USDT</span>`;
             document.getElementById('main-usd').innerText = `≈ Real USD Value: $${bal.toFixed(2)} USD`;
             document.getElementById('stat-balance').innerText = `${bal.toFixed(3)} USDT`;
             
-            // Wallet Page
             document.getElementById('wallet-balance').innerText = `$${bal.toFixed(2)}`;
             document.getElementById('wallet-usdt').innerText = `${bal.toFixed(3)} USDT`;
         }
@@ -592,6 +546,30 @@
 
         function openHistoryModal() { 
             document.getElementById('historyModal').style.display = 'flex'; 
+        }
+
+        // অ্যাড দেখার ফাংশন
+        async function watchAd() {
+            try {
+                const result = await adController.show();
+                if (result.done) {
+                    fetch('/api/add_ad_reward', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: userId })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.status === "success") {
+                            currentBalance += 0.001;
+                            updateBalanceUI(currentBalance);
+                            alert("Ad Watched! +0.001 USDT added.");
+                        }
+                    });
+                }
+            } catch (e) {
+                alert("Ad not available right now. Try again later.");
+            }
         }
     </script>
 </body>
