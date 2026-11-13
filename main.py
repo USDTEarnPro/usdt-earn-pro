@@ -1,30 +1,23 @@
 from flask import Flask, render_template, request, jsonify
 import telebot
 import os
-import sqlite3
+from pymongo import MongoClient
 from datetime import datetime
 
 app = Flask(__name__, template_folder='.')
-BOT_TOKEN = '9057837958:AAF5rqXdNflZXoejHktaVh7HLCokEUMxJEA' 
+# আপনার নতুন বটের টোকেন
+BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
+# এখানে আপনার টেলিগ্রাম আইডি বসান (যেমন: 123456789)
+ADMIN_ID = 123456789 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-def get_db():
-    conn = sqlite3.connect('users.db', check_same_thread=False)
-    return conn
-
-def init_db():
-    conn = get_db()
-    c = conn.cursor()
-    # ইউজার টেবিল
-    c.execute('''CREATE TABLE IF NOT EXISTS users 
-                 (user_id TEXT PRIMARY KEY, name TEXT, balance REAL DEFAULT 0.0, missions_done INTEGER DEFAULT 0, joined_channel INTEGER DEFAULT 0, refs INTEGER DEFAULT 0)''')
-    # হিস্ট্রি টেবিল (নতুন)
-    c.execute('''CREATE TABLE IF NOT EXISTS history 
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, task_name TEXT, amount REAL, timestamp TEXT)''')
-    conn.commit()
-    conn.close()
-
-init_db()
+# আপনার MongoDB লিংক
+MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
+client = MongoClient(MONGO_URI)
+db = client['usdt_bot_db']
+users_col = db['users']
+history_col = db['history']
+withdraw_col = db['withdrawals']
 
 @app.route('/')
 def index():
@@ -36,41 +29,23 @@ def get_user():
         data = request.json
         user_id = str(data.get('user_id'))
         name = data.get('name')
-        referrer_id = data.get('referrer_id') 
+        referrer_id = data.get('referrer_id')
         
-        conn = get_db()
-        c = conn.cursor()
-        c.execute("SELECT balance, missions_done, joined_channel, refs FROM users WHERE user_id=?", (user_id,))
-        user = c.fetchone()
-        
-        if user is None:
-            # নতুন ইউজার তৈরি
-            c.execute("INSERT INTO users (user_id, name) VALUES (?, ?)", (user_id, name))
+        user = users_col.find_one({"user_id": user_id})
+        if not user:
+            users_col.insert_one({"user_id": user_id, "name": name, "balance": 0.0, "missions": 0, "joined": 0, "refs": 0})
             
-            # রেফারেল লজিক (সঠিকভাবে)
             if referrer_id and referrer_id != user_id:
-                c.execute("SELECT user_id FROM users WHERE user_id=?", (referrer_id,))
-                if c.fetchone():
-                    # রেফারারকে ০.০৫০ USDT বোনাস ও ১ জন কাউন্ট
-                    c.execute("UPDATE users SET refs = refs + 1, balance = balance + 0.050 WHERE user_id=?", (referrer_id,))
-                    # রেফারারের হিস্ট্রিতে সেভ
-                    time_now = datetime.now().strftime("%Y-%m-%d %H:%M")
-                    c.execute("INSERT INTO history (user_id, task_name, amount, timestamp) VALUES (?, ?, ?, ?)", 
-                              (referrer_id, f"Referral Bonus ({name})", 0.050, time_now))
-                    
-            conn.commit()
-            balance, missions, joined, refs = 0.0, 0, 0, 0
-        else:
-            balance, missions, joined, refs = user
+                if users_col.find_one({"user_id": referrer_id}):
+                    users_col.update_one({"user_id": referrer_id}, {"$inc": {"refs": 1, "balance": 0.050}})
+                    history_col.insert_one({"user_id": referrer_id, "task": "Referral Bonus", "amount": 0.050, "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
+            user = users_col.find_one({"user_id": user_id})
             
-        # হিস্ট্রি ডাটা আনা
-        c.execute("SELECT task_name, amount, timestamp FROM history WHERE user_id=? ORDER BY id DESC LIMIT 10", (user_id,))
-        history_data = [{"task": row[0], "amount": row[1], "time": row[2]} for row in c.fetchall()]
+        history = list(history_col.find({"user_id": user_id}).sort("_id", -1).limit(10))
+        history_data = [{"task": h["task"], "amount": h["amount"], "time": h["time"]} for h in history]
         
-        conn.close()
-        return jsonify({"balance": balance, "missions": missions, "joined": joined, "refs": refs, "history": history_data})
+        return jsonify({"status": "success", "balance": user["balance"], "missions": user["missions"], "joined": user["joined"], "refs": user["refs"], "history": history_data})
     except Exception as e:
-        print(f"Error in get_user: {e}")
         return jsonify({"status": "error", "message": str(e)})
 
 @app.route('/api/verify_mission', methods=['POST'])
@@ -78,47 +53,57 @@ def verify_mission():
     try:
         data = request.json
         user_id = str(data.get('user_id'))
+        user = users_col.find_one({"user_id": user_id})
         
-        conn = get_db()
-        c = conn.cursor()
-        c.execute("SELECT joined_channel FROM users WHERE user_id=?", (user_id,))
-        user = c.fetchone()
-        
-        if user and user[0] == 0:
-            time_now = datetime.now().strftime("%Y-%m-%d %H:%M")
-            c.execute("UPDATE users SET balance = balance + 0.010, missions_done = missions_done + 1, joined_channel = 1 WHERE user_id=?", (user_id,))
-            c.execute("INSERT INTO history (user_id, task_name, amount, timestamp) VALUES (?, ?, ?, ?)", 
-                      (user_id, "Joined SABX Earn BD", 0.010, time_now))
-            conn.commit()
-            conn.close()
+        if user and user["joined"] == 0:
+            users_col.update_one({"user_id": user_id}, {"$inc": {"balance": 0.010, "missions": 1}, "$set": {"joined": 1}})
+            history_col.insert_one({"user_id": user_id, "task": "Joined Channel", "amount": 0.010, "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
             return jsonify({"status": "success", "message": "Mission verified! +0.010 USDT added."})
-        
-        conn.close()
-        return jsonify({"status": "error", "message": "Already verified or user not found."})
+        return jsonify({"status": "error", "message": "Already verified."})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# ভবিষ্যতের জন্য অ্যাড রিওয়ার্ড API (এখন বাটন নেই, তবে কোড ঠিক আছে)
-@app.route('/api/add_ad_reward', methods=['POST'])
-def add_ad_reward():
+@app.route('/api/request_withdraw', methods=['POST'])
+def request_withdraw():
     try:
         data = request.json
         user_id = str(data.get('user_id'))
-        conn = get_db()
-        c = conn.cursor()
-        time_now = datetime.now().strftime("%Y-%m-%d %H:%M")
-        c.execute("UPDATE users SET balance = balance + 0.001 WHERE user_id=?", (user_id,))
-        c.execute("INSERT INTO history (user_id, task_name, amount, timestamp) VALUES (?, ?, ?, ?)", 
-                  (user_id, "Watched Ad", 0.001, time_now))
-        conn.commit()
-        conn.close()
-        return jsonify({"status": "success", "message": "Ad reward added!"})
+        amount = float(data.get('amount'))
+        
+        user = users_col.find_one({"user_id": user_id})
+        if user and user["refs"] >= 10 and amount <= user["balance"] and amount >= 0.01:
+            withdraw_col.insert_one({"user_id": user_id, "address": data['address'], "amount": amount, "status": "Pending", "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
+            try:
+                bot.send_message(ADMIN_ID, f"🚨 নতুন উইথড্র!\nইউজার: {user['name']} (ID: {user_id})\nঅ্যামাউন্ট: {amount} USDT\nঅ্যাড্রেস: `{data['address']}`", parse_mode='Markdown')
+            except: pass
+            return jsonify({"status": "success", "message": "Withdraw request sent to admin."})
+        return jsonify({"status": "error", "message": "Requirements not met."})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Welcome to USDT EARN PRO! Click the button below to open the app.")
+    # সুন্দর টেক্সট ও ওপেন অ্যাপ বাটন
+    from telebot import types
+    markup = types.InlineKeyboardMarkup()
+    web_app_url = "https://usdt-earn-pro.onrender.com"
+    web_app_btn = types.InlineKeyboardButton(text="💎 Open App", web_app=types.WebAppInfo(url=web_app_url))
+    markup.add(web_app_btn)
+    
+    welcome_text = (
+        "💎 <b>WELCOME TO GRAM X PRO</b>\n"
+        "<i>Your Journey. Your Rewards. Your Future.</i>\n"
+        "━━━━━━━━━━━━━━━━━━\n"
+        "⚡️ <b>UNLOCK YOUR POTENTIAL</b>\n"
+        "➡️ <b>EXPLORE</b> — Discover new opportunities\n"
+        "💰 <b>EARN</b> — Get rewarded for your efforts\n"
+        "👍 <b>WITHDRAW</b> — Cash out when eligible\n"
+        "━━━━━━━━━━━━━━━━━━\n"
+        "👇 <b>YOUR JOURNEY STARTS HERE</b>\n"
+        "✅ <i>Every task brings a new opportunity. Are you ready to begin?</i>\n"
+        "🤑 <b>ENTER THE WORLD OF USDT EARN PRO</b>"
+    )
+    bot.reply_to(message, welcome_text, reply_markup=markup, parse_mode='HTML')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
