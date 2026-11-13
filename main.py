@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import telebot
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 # আপনার টোকেন নিচে বসানো হয়েছে
 BOT_TOKEN = '9057837958:AAF5rqXdNflZXoejHktaVh7HLCokEUMxJEA' 
