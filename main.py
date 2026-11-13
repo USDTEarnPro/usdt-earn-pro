@@ -1,68 +1,69 @@
 from flask import Flask, render_template, request, jsonify
 import telebot
 import os
-import sqlite3
+from pymongo import MongoClient
 
 app = Flask(__name__, template_folder='.')
-# আপনার বটের টোকেন
 BOT_TOKEN = '9057837958:AAF5rqXdNflZXoejHktaVh7HLCokEUMxJEA' 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# ডাটাবেস তৈরি করা
-def init_db():
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS users 
-                 (user_id TEXT PRIMARY KEY, name TEXT, balance REAL DEFAULT 0.0, missions_done INTEGER DEFAULT 0, joined_channel INTEGER DEFAULT 0)''')
-    conn.commit()
-    conn.close()
+# এখানে আপনার MongoDB এর লিংক বসান (পাসওয়ার্ড সহ)
+MONGO_URI = "mongodb+srv://admin:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority"
 
-init_db()
+# ডাটাবেস কানেক্ট করা
+client = MongoClient(MONGO_URI)
+db = client['usdt_bot_db']
+users_collection = db['users']
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# ইউজারের ডাটা আনা (অ্যাপ ওপেন হলে)
+# ইউজারের ডাটা আনা
 @app.route('/api/get_user', methods=['POST'])
 def get_user():
     data = request.json
     user_id = str(data.get('user_id'))
     name = data.get('name')
     
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("SELECT balance, missions_done, joined_channel FROM users WHERE user_id=?", (user_id,))
-    user = c.fetchone()
+    user = users_collection.find_one({"user_id": user_id})
     
     if user is None:
-        c.execute("INSERT INTO users (user_id, name) VALUES (?, ?)", (user_id, name))
-        conn.commit()
-        balance, missions, joined = 0.0, 0, 0
+        # নতুন ইউজার তৈরি
+        new_user = {
+            "user_id": user_id, 
+            "name": name, 
+            "balance": 0.0, 
+            "missions_done": 0, 
+            "joined_channel": 0,
+            "refs": 0
+        }
+        users_collection.insert_one(new_user)
+        balance, missions, joined, refs = 0.0, 0, 0, 0
     else:
-        balance, missions, joined = user
+        balance = user.get("balance", 0.0)
+        missions = user.get("missions_done", 0)
+        joined = user.get("joined_channel", 0)
+        refs = user.get("refs", 0)
         
-    conn.close()
-    return jsonify({"balance": balance, "missions": missions, "joined": joined})
+    return jsonify({"balance": balance, "missions": missions, "joined": joined, "refs": refs})
 
-# চ্যানেল ভেরিফাই করা (ব্যালেন্স যোগ করা)
+# চ্যানেল ভেরিফাই করা
 @app.route('/api/verify_mission', methods=['POST'])
 def verify_mission():
     data = request.json
     user_id = str(data.get('user_id'))
     
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("SELECT joined_channel FROM users WHERE user_id=?", (user_id,))
-    user = c.fetchone()
+    user = users_collection.find_one({"user_id": user_id})
     
-    if user and user[0] == 0:
-        c.execute("UPDATE users SET balance = balance + 0.010, missions_done = missions_done + 1, joined_channel = 1 WHERE user_id=?", (user_id,))
-        conn.commit()
-        conn.close()
+    if user and user.get("joined_channel", 0) == 0:
+        # ব্যালেন্স আপডেট
+        users_collection.update_one(
+            {"user_id": user_id},
+            {"$inc": {"balance": 0.010, "missions_done": 1}, "$set": {"joined_channel": 1}}
+        )
         return jsonify({"status": "success", "message": "Mission verified! +0.010 USDT added."})
     
-    conn.close()
     return jsonify({"status": "error", "message": "Already verified or user not found."})
 
 @bot.message_handler(commands=['start'])
