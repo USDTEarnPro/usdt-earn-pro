@@ -7,23 +7,16 @@ from telebot import types
 
 app = Flask(__name__, template_folder='.')
 
-# আপনার বটের টোকেন
 BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
-# এখানে আপনার টেলিগ্রাম আইডি দিন (আপনার আইডি না দিলে উইথড্র নোটিফিকেশন পাবেন না)
-ADMIN_ID = 123456789 
+ADMIN_ID = 8780715969
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# MongoDB লিংক (পাসওয়ার্ড সহ)
 MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
-
-try:
-    client = MongoClient(MONGO_URI)
-    db = client['usdt_bot_db']
-    users_col = db['users']
-    history_col = db['history']
-    print("✅ MongoDB Connected Successfully!")
-except Exception as e:
-    print("❌ MongoDB Connection Error:", e)
+client = MongoClient(MONGO_URI)
+db = client['usdt_bot_db']
+users_col = db['users']
+history_col = db['history']
+withdraw_col = db['withdrawals']
 
 @app.route('/')
 def index():
@@ -40,12 +33,12 @@ def get_user():
         user = users_col.find_one({"user_id": user_id})
         
         if not user:
+            # নতুন ইউজার তৈরি (joined2 যোগ করা হয়েছে)
             users_col.insert_one({
                 "user_id": user_id, "name": name, "balance": 0.0, 
-                "missions": 0, "joined": 0, "refs": 0
+                "missions": 0, "joined": 0, "joined2": 0, "refs": 0 
             })
             
-            # রেফারেল বোনাস লজিক
             if referrer_id and referrer_id != user_id:
                 referrer = users_col.find_one({"user_id": referrer_id})
                 if referrer:
@@ -65,6 +58,7 @@ def get_user():
             "balance": float(user.get("balance", 0.0)), 
             "missions": int(user.get("missions", 0)), 
             "joined": int(user.get("joined", 0)), 
+            "joined2": int(user.get("joined2", 0)), # নতুন চ্যানেলের স্ট্যাটাস
             "refs": int(user.get("refs", 0)), 
             "history": history_data
         })
@@ -88,7 +82,28 @@ def verify_mission():
                 "amount": 0.010, "time": datetime.now().strftime("%Y-%m-%d %H:%M")
             })
             return jsonify({"status": "success", "message": "Mission verified! +0.010 USDT added."})
+        return jsonify({"status": "error", "message": "Already verified."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+# নতুন চ্যানেলের ভেরিফাই রুট
+@app.route('/api/verify_mission2', methods=['POST'])
+def verify_mission2():
+    try:
+        data = request.json
+        user_id = str(data.get('user_id'))
+        user = users_col.find_one({"user_id": user_id})
         
+        if user and user.get("joined2", 0) == 0:
+            users_col.update_one(
+                {"user_id": user_id}, 
+                {"$inc": {"balance": 0.010, "missions": 1}, "$set": {"joined2": 1}}
+            )
+            history_col.insert_one({
+                "user_id": user_id, "task": "Joined SX EARN PRO", 
+                "amount": 0.010, "time": datetime.now().strftime("%Y-%m-%d %H:%M")
+            })
+            return jsonify({"status": "success", "message": "Mission verified! +0.010 USDT added."})
         return jsonify({"status": "error", "message": "Already verified."})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
@@ -99,7 +114,6 @@ def send_welcome(message):
     web_app_btn = types.InlineKeyboardButton(text="💎 Open App", web_app=types.WebAppInfo(url="https://usdt-earn-pro.onrender.com"))
     markup.add(web_app_btn)
     
-    # Welcome টেক্সট রিমুভ করা হয়েছে, শুধু বাটন থাকবে
     bot.reply_to(message, "👇 Click below to open the app", reply_markup=markup)
 
 if __name__ == '__main__':
