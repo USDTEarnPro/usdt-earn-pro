@@ -3,21 +3,27 @@ import telebot
 import os
 from pymongo import MongoClient
 from datetime import datetime
+from telebot import types
 
 app = Flask(__name__, template_folder='.')
-# আপনার নতুন বটের টোকেন
+
+# আপনার বটের টোকেন
 BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
-# এখানে আপনার টেলিগ্রাম আইডি বসান (যেমন: 123456789)
+# এখানে আপনার টেলিগ্রাম আইডি দিন (আপনার আইডি না দিলে উইথড্র নোটিফিকেশন পাবেন না)
 ADMIN_ID = 123456789 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# আপনার MongoDB লিংক
+# MongoDB লিংক (পাসওয়ার্ড সহ)
 MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(MONGO_URI)
-db = client['usdt_bot_db']
-users_col = db['users']
-history_col = db['history']
-withdraw_col = db['withdrawals']
+
+try:
+    client = MongoClient(MONGO_URI)
+    db = client['usdt_bot_db']
+    users_col = db['users']
+    history_col = db['history']
+    print("✅ MongoDB Connected Successfully!")
+except Exception as e:
+    print("❌ MongoDB Connection Error:", e)
 
 @app.route('/')
 def index():
@@ -32,19 +38,36 @@ def get_user():
         referrer_id = data.get('referrer_id')
         
         user = users_col.find_one({"user_id": user_id})
+        
         if not user:
-            users_col.insert_one({"user_id": user_id, "name": name, "balance": 0.0, "missions": 0, "joined": 0, "refs": 0})
+            users_col.insert_one({
+                "user_id": user_id, "name": name, "balance": 0.0, 
+                "missions": 0, "joined": 0, "refs": 0
+            })
             
+            # রেফারেল বোনাস লজিক
             if referrer_id and referrer_id != user_id:
-                if users_col.find_one({"user_id": referrer_id}):
+                referrer = users_col.find_one({"user_id": referrer_id})
+                if referrer:
                     users_col.update_one({"user_id": referrer_id}, {"$inc": {"refs": 1, "balance": 0.050}})
-                    history_col.insert_one({"user_id": referrer_id, "task": "Referral Bonus", "amount": 0.050, "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
+                    history_col.insert_one({
+                        "user_id": referrer_id, "task": "Referral Bonus", 
+                        "amount": 0.050, "time": datetime.now().strftime("%Y-%m-%d %H:%M")
+                    })
+            
             user = users_col.find_one({"user_id": user_id})
             
         history = list(history_col.find({"user_id": user_id}).sort("_id", -1).limit(10))
         history_data = [{"task": h["task"], "amount": h["amount"], "time": h["time"]} for h in history]
         
-        return jsonify({"status": "success", "balance": user["balance"], "missions": user["missions"], "joined": user["joined"], "refs": user["refs"], "history": history_data})
+        return jsonify({
+            "status": "success", 
+            "balance": float(user.get("balance", 0.0)), 
+            "missions": int(user.get("missions", 0)), 
+            "joined": int(user.get("joined", 0)), 
+            "refs": int(user.get("refs", 0)), 
+            "history": history_data
+        })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
@@ -55,55 +78,29 @@ def verify_mission():
         user_id = str(data.get('user_id'))
         user = users_col.find_one({"user_id": user_id})
         
-        if user and user["joined"] == 0:
-            users_col.update_one({"user_id": user_id}, {"$inc": {"balance": 0.010, "missions": 1}, "$set": {"joined": 1}})
-            history_col.insert_one({"user_id": user_id, "task": "Joined Channel", "amount": 0.010, "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
+        if user and user.get("joined", 0) == 0:
+            users_col.update_one(
+                {"user_id": user_id}, 
+                {"$inc": {"balance": 0.010, "missions": 1}, "$set": {"joined": 1}}
+            )
+            history_col.insert_one({
+                "user_id": user_id, "task": "Joined SABX Earn BD", 
+                "amount": 0.010, "time": datetime.now().strftime("%Y-%m-%d %H:%M")
+            })
             return jsonify({"status": "success", "message": "Mission verified! +0.010 USDT added."})
-        return jsonify({"status": "error", "message": "Already verified."})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
-@app.route('/api/request_withdraw', methods=['POST'])
-def request_withdraw():
-    try:
-        data = request.json
-        user_id = str(data.get('user_id'))
-        amount = float(data.get('amount'))
         
-        user = users_col.find_one({"user_id": user_id})
-        if user and user["refs"] >= 10 and amount <= user["balance"] and amount >= 0.01:
-            withdraw_col.insert_one({"user_id": user_id, "address": data['address'], "amount": amount, "status": "Pending", "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
-            try:
-                bot.send_message(ADMIN_ID, f"🚨 নতুন উইথড্র!\nইউজার: {user['name']} (ID: {user_id})\nঅ্যামাউন্ট: {amount} USDT\nঅ্যাড্রেস: `{data['address']}`", parse_mode='Markdown')
-            except: pass
-            return jsonify({"status": "success", "message": "Withdraw request sent to admin."})
-        return jsonify({"status": "error", "message": "Requirements not met."})
+        return jsonify({"status": "error", "message": "Already verified."})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    # সুন্দর টেক্সট ও ওপেন অ্যাপ বাটন
-    from telebot import types
     markup = types.InlineKeyboardMarkup()
-    web_app_url = "https://usdt-earn-pro.onrender.com"
-    web_app_btn = types.InlineKeyboardButton(text="💎 Open App", web_app=types.WebAppInfo(url=web_app_url))
+    web_app_btn = types.InlineKeyboardButton(text="💎 Open App", web_app=types.WebAppInfo(url="https://usdt-earn-pro.onrender.com"))
     markup.add(web_app_btn)
     
-    welcome_text = (
-        "💎 <b>WELCOME TO GRAM X PRO</b>\n"
-        "<i>Your Journey. Your Rewards. Your Future.</i>\n"
-        "━━━━━━━━━━━━━━━━━━\n"
-        "⚡️ <b>UNLOCK YOUR POTENTIAL</b>\n"
-        "➡️ <b>EXPLORE</b> — Discover new opportunities\n"
-        "💰 <b>EARN</b> — Get rewarded for your efforts\n"
-        "👍 <b>WITHDRAW</b> — Cash out when eligible\n"
-        "━━━━━━━━━━━━━━━━━━\n"
-        "👇 <b>YOUR JOURNEY STARTS HERE</b>\n"
-        "✅ <i>Every task brings a new opportunity. Are you ready to begin?</i>\n"
-        "🤑 <b>ENTER THE WORLD OF USDT EARN PRO</b>"
-    )
-    bot.reply_to(message, welcome_text, reply_markup=markup, parse_mode='HTML')
+    # Welcome টেক্সট রিমুভ করা হয়েছে, শুধু বাটন থাকবে
+    bot.reply_to(message, "👇 Click below to open the app", reply_markup=markup)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
