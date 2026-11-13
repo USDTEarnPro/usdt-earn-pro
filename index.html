@@ -98,6 +98,16 @@
         .history-title { font-weight: 700; font-size: 14px; color: #fff; }
         .history-time { font-size: 10px; color: #555; margin-top: 4px; }
         .history-amount { color: var(--accent); font-weight: 800; font-size: 14px; background: #0d2219; padding: 4px 10px; border-radius: 8px; height: fit-content;}
+
+        /* Premium Alert Modal CSS */
+        .custom-alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 9999; }
+        .custom-alert-box { background: linear-gradient(160deg, #0d1814, #060a08); border: 1px solid rgba(255, 170, 0, 0.4); width: 85%; max-width: 320px; border-radius: 24px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .alert-icon { font-size: 45px; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.5)); }
+        .alert-title { font-size: 20px; font-weight: 800; color: #ffaa00; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.4); letter-spacing: 0.5px;}
+        .alert-message { font-size: 14px; color: #a0b0a8; line-height: 1.6; margin-bottom: 25px; font-weight: 500;}
+        .alert-btn { background: linear-gradient(135deg, #ffaa00 0%, #ff8800 100%); color: #000; border: none; padding: 14px 20px; border-radius: 12px; font-weight: 800; font-size: 15px; width: 100%; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3); transition: 0.2s; }
+        .alert-btn:active { transform: scale(0.96); box-shadow: 0 2px 5px rgba(255, 170, 0, 0.2); }
     </style>
 </head>
 <body>
@@ -260,7 +270,6 @@
         <div id="page-missions" class="page">
             <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(0,255,136,0.4);">MISSIONS</h3>
             <div class="quick-nav">
-                <!-- Mission 1 -->
                 <div class="nav-item-card" id="mission-sabx">
                     <div class="nav-icon-box bg-blue">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#4facfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
@@ -272,20 +281,6 @@
                     <button id="join-btn" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px;" onclick="joinChannel()">Join</button>
                     <button id="verify-btn" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px; display: none; background: #ffaa00; color: #000;" onclick="verifyChannel()">Verify</button>
                     <div id="claimed-text" style="display: none; color: var(--accent); font-weight: 700; font-size: 12px;">Claimed 🏆</div>
-                </div>
-
-                <!-- Mission 2 (New Channel Added) -->
-                <div class="nav-item-card" id="mission-new">
-                    <div class="nav-icon-box bg-purple">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#b84dfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-                    </div>
-                    <div class="nav-text-box">
-                        <div class="nav-title">Join SX EARN PRO</div>
-                        <div class="nav-sub" style="color: var(--accent); font-weight: 700;">+0.010 USDT</div>
-                    </div>
-                    <button id="join-btn2" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px;" onclick="joinChannel2()">Join</button>
-                    <button id="verify-btn2" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px; display: none; background: #ffaa00; color: #000;" onclick="verifyChannel2()">Verify</button>
-                    <div id="claimed-text2" style="display: none; color: var(--accent); font-weight: 700; font-size: 12px;">Claimed 🏆</div>
                 </div>
             </div>
         </div>
@@ -396,6 +391,16 @@
         </div>
     </div>
 
+    <!-- Premium Alert Modal -->
+    <div class="custom-alert-overlay" id="customAlert">
+        <div class="custom-alert-box">
+            <div class="alert-icon" id="alertIcon">⚠️</div>
+            <div class="alert-title" id="alertTitle">Oops!</div>
+            <div class="alert-message" id="alertMessage"></div>
+            <button class="alert-btn" onclick="closeCustomAlert()">Got It</button>
+        </div>
+    </div>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -434,7 +439,7 @@
             .then(res => res.json())
             .then(data => {
                 if(data.status === "error") {
-                    alert("সার্ভার এরর: " + data.message);
+                    showCustomAlert("Server Error", data.message, "❌");
                     return;
                 }
                 currentBalance = data.balance;
@@ -448,18 +453,12 @@
                     document.getElementById('verify-btn').style.display = 'none';
                     document.getElementById('claimed-text').style.display = 'block';
                 }
-                
-                if(data.joined2 === 1) {
-                    document.getElementById('join-btn2').style.display = 'none';
-                    document.getElementById('verify-btn2').style.display = 'none';
-                    document.getElementById('claimed-text2').style.display = 'block';
-                }
 
                 renderHistory(data.history);
             })
             .catch(err => {
                 console.error(err);
-                alert("নেটওয়ার্ক এরর! সার্ভার হয়তো ঘুমিয়ে আছে। ৩০ সেকেন্ড পর আবার চেষ্টা করুন।");
+                showCustomAlert("Network Error", "Server is waking up. Please try again in 30 seconds.", "📡");
             });
         } else {
             document.getElementById('ref-link').innerText = `https://t.me/${BOT_USERNAME}`;
@@ -482,20 +481,26 @@
         }
 
         function openWithdrawModal() { 
-            if (userRefs < 10) {
-                alert("⚠️ উইথড্র করতে কমপক্ষে ১০ জন রেফারেল দরকার!");
-                return;
-            }
             document.getElementById('withdrawModal').style.display = 'flex'; 
         }
         
         function submitWithdraw() {
+            if (userRefs < 10) {
+                showCustomAlert("Hold On!", "You need at least 10 active referrals to unlock withdrawals. Invite your friends using the Invite tab and start earning!", "🔒");
+                return;
+            }
+            
             const address = document.getElementById('wd-address').value;
             const amount = document.getElementById('wd-amount').value;
             if(!address || !amount || amount < 0.01) {
-                alert("সঠিক অ্যাড্রেস এবং এমাউন্ট দিন (সর্বনিম্ন 0.01)।");
+                showCustomAlert("Invalid Input", "Please enter a valid wallet address and amount (Min 0.01).", "⚠️");
                 return;
             }
+            
+            const btn = event.target;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
             fetch('/api/request_withdraw', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -504,11 +509,13 @@
             .then(res => res.json())
             .then(data => {
                 if(data.status === "success") {
-                    alert("✅ উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!");
+                    showCustomAlert("Success!", "Your withdraw request has been sent to the admin. Please wait for payout.", "✅");
                     closeModal('withdrawModal');
                 } else {
-                    alert("এরর: " + data.message);
+                    showCustomAlert("Error", data.message, "❌");
                 }
+                btn.innerText = "Confirm Cashout";
+                btn.disabled = false;
             });
         }
 
@@ -516,7 +523,7 @@
 
         function copyLink() {
             const link = document.getElementById('ref-link').innerText;
-            navigator.clipboard.writeText(link).then(() => alert("রেফারেল লিংক কপি হয়েছে!"));
+            navigator.clipboard.writeText(link).then(() => showCustomAlert("Copied!", "Referral link copied to clipboard.", "📋"));
         }
 
         function shareLink() {
@@ -525,7 +532,6 @@
             tg.openTelegramLink(`https://t.me/share/url?url=${link}&text=${text}`);
         }
 
-        // Mission 1
         let isJoined = false;
         function joinChannel() {
             tg.openTelegramLink('https://t.me/SABXEarnBD');
@@ -554,47 +560,9 @@
                         let missions = parseInt(document.getElementById('mission-count').innerText) + 1;
                         document.getElementById('mission-count').innerText = `${missions} Completed`;
                         fetchHistory();
-                        alert("✅ ভেরিফাই সফল! +0.010 USDT যোগ হয়েছে।");
+                        showCustomAlert("Success!", "Mission verified successfully! +0.010 USDT added.", "🎉");
                     } else {
-                        alert("এরর: " + data.message);
-                        btn.innerText = 'Verify'; btn.style.background = '#ffaa00'; btn.style.color = '#000'; btn.disabled = false;
-                    }
-                });
-            }
-        }
-
-        // Mission 2
-        let isJoined2 = false;
-        function joinChannel2() {
-            tg.openTelegramLink('https://t.me/SX_EARN_PRO');
-            isJoined2 = true;
-            document.getElementById('join-btn2').style.display = 'none';
-            document.getElementById('verify-btn2').style.display = 'block';
-        }
-
-        function verifyChannel2() {
-            if(isJoined2 && userId) {
-                const btn = document.getElementById('verify-btn2');
-                btn.innerText = 'Verifying...'; btn.style.background = '#333'; btn.style.color = '#fff'; btn.disabled = true;
-
-                fetch('/api/verify_mission2', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId.toString() })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.status === "success") {
-                        btn.style.display = 'none';
-                        document.getElementById('claimed-text2').style.display = 'block';
-                        currentBalance += 0.010;
-                        updateBalanceUI(currentBalance);
-                        let missions = parseInt(document.getElementById('mission-count').innerText) + 1;
-                        document.getElementById('mission-count').innerText = `${missions} Completed`;
-                        fetchHistory();
-                        alert("✅ ভেরিফাই সফল! +0.010 USDT যোগ হয়েছে।");
-                    } else {
-                        alert("এরর: " + data.message);
+                        showCustomAlert("Error", data.message, "❌");
                         btn.innerText = 'Verify'; btn.style.background = '#ffaa00'; btn.style.color = '#000'; btn.disabled = false;
                     }
                 });
@@ -629,6 +597,18 @@
         }
 
         function openHistoryModal() { document.getElementById('historyModal').style.display = 'flex'; }
+
+        // Custom Alert Logic
+        function showCustomAlert(title, message, icon = "⚠️") {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            document.getElementById('alertIcon').innerText = icon;
+            document.getElementById('customAlert').style.display = 'flex';
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('customAlert').style.display = 'none';
+        }
     </script>
 </body>
 </html>
