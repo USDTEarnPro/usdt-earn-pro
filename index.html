@@ -26,7 +26,6 @@
         /* Top Header */
         .app-header { display: flex; justify-content: center; align-items: center; padding: 15px; background: #000; border-bottom: 1px solid #111; }
         .header-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; color: var(--accent);}
-        .header-logo { width: 24px; height: 24px; }
 
         /* Profile Section */
         .profile-section { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
@@ -63,7 +62,7 @@
         .stats-grid { display: flex; gap: 10px; margin-bottom: 15px; }
         .stat-box { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer; }
         .stat-box:active { background: #1a2e25; }
-        .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin: 0 auto 10px auto; background: #1a2e25;}
+        .stat-icon { font-size: 20px; margin-bottom: 10px; background: #1a2e25; width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; margin: 0 auto 10px auto; }
         .stat-title { font-weight: 600; font-size: 13px; color: #fff;}
         .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; }
 
@@ -84,9 +83,9 @@
         .quick-title { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 15px; letter-spacing: 0.5px;}
         .nav-item-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
         .nav-item-card:last-child { margin-bottom: 0; }
-        .nav-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
-        .bg-blue { background: #0e2a3b; }
-        .bg-purple { background: #2b1433; }
+        .nav-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 18px;}
+        .bg-blue { background: #0e2a3b; color: #4facfe;}
+        .bg-purple { background: #2b1433; color: #b84dfe;}
         .nav-text-box { flex: 1; margin-left: 15px; }
         .nav-title { font-weight: 600; font-size: 14px; margin-bottom: 3px;}
         .nav-sub { font-size: 11px; color: var(--text-muted); }
@@ -95,13 +94,12 @@
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid #111; z-index: 100; }
         .nav-item { text-align: center; color: #555; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: 500;}
         .nav-item.active { color: var(--accent); }
-        .nav-icon { font-size: 24px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;}
-        .nav-icon img { width: 100%; height: 100%; object-fit: contain; }
-
-        /* Premium Image Icons */
-        .img-icon { width: 24px; height: 24px; object-fit: contain; }
-        .img-icon-large { width: 32px; height: 32px; object-fit: contain; }
-        .img-icon-small { width: 18px; height: 18px; object-fit: contain; }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center;}
+        
+        /* Premium SVGs */
+        .svg-icon { width: 22px; height: 22px; }
+        .svg-icon-large { width: 26px; height: 26px; }
+        .svg-icon-small { width: 18px; height: 18px; }
 
         /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
@@ -133,7 +131,10 @@
     <!-- Top Header -->
     <div class="app-header">
         <div class="header-title">
-            <img src="https://img.icons8.com/color/48/tether--v1.png" class="header-logo" alt="USDT">
+            <svg class="svg-icon" viewBox="0 0 32 32" style="fill: #26A17B;">
+                <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                <path d="M17.922 13.858v-2.331h4.585V8.031H9.492v3.496h4.585v2.331c-3.797.187-6.64 1.015-6.64 2.011 0 .996 2.843 1.824 6.64 2.011v7.12h3.845v-7.12c3.797-.187 6.64-1.015 6.64-2.011 0-.996-2.843-1.824-6.64-2.011zm0 3.635v-.002c-.08.006-.517.033-1.474.033-.756 0-1.297-.024-1.493-.033v.002c-3.371-.159-5.888-.782-5.888-1.533 0-.75 2.517-1.374 5.888-1.533v2.581c.2.014.749.043 1.507.043.923 0 1.384-.029 1.46-.034v-2.59c3.365.159 5.877.783 5.877 1.533 0 .751-2.512 1.374-5.877 1.533z" fill="#FFFFFF"/>
+            </svg>
             USDT EARN PRO
         </div>
     </div>
@@ -148,9 +149,14 @@
             </div>
         </div>
         <div class="user-right">
-            <div class="icon-btn">🔊</div>
+            <div class="icon-btn">
+                <svg class="svg-icon-small" style="fill: #888;" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </div>
             <div class="network-badge">
-                <img src="https://img.icons8.com/color/48/tether--v1.png" class="img-icon-small" alt="USDT">
+                <svg class="svg-icon-small" viewBox="0 0 32 32" style="fill: #26A17B;">
+                    <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                    <path d="M17.922 13.858v-2.331h4.585V8.031H9.492v3.496h4.585v2.331c-3.797.187-6.64 1.015-6.64 2.011 0 .996 2.843 1.824 6.64 2.011v7.12h3.845v-7.12c3.797-.187 6.64-1.015 6.64-2.011 0-.996-2.843-1.824-6.64-2.011zm0 3.635v-.002c-.08.006-.517.033-1.474.033-.756 0-1.297-.024-1.493-.033v.002c-3.371-.159-5.888-.782-5.888-1.533 0-.75 2.517-1.374 5.888-1.533v2.581c.2.014.749.043 1.507.043.923 0 1.384-.029 1.46-.034v-2.59c3.365.159 5.877.783 5.877 1.533 0 .751-2.512 1.374-5.877 1.533z" fill="#FFFFFF"/>
+                </svg>
                 BEP-20
             </div>
         </div>
@@ -170,29 +176,36 @@
                     <span>🔒 BNB Smart Chain</span>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn" onclick="openWithdrawModal()">↑ Withdraw</button>
-                    <button class="btn btn-outline" onclick="openHistoryModal()">↺ History</button>
+                    <button class="btn" onclick="openWithdrawModal()">
+                        <svg class="svg-icon-small" viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg> Withdraw
+                    </button>
+                    <button class="btn btn-outline" onclick="openHistoryModal()">
+                        <svg class="svg-icon-small" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg> History
+                    </button>
                 </div>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-box" onclick="switchTab('wallet')">
                     <div class="stat-icon">
-                        <img src="https://img.icons8.com/color/48/tether--v1.png" class="img-icon-large" alt="USDT">
+                        <svg class="svg-icon-large" viewBox="0 0 32 32" style="fill: #26A17B;">
+                            <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                            <path d="M17.922 13.858v-2.331h4.585V8.031H9.492v3.496h4.585v2.331c-3.797.187-6.64 1.015-6.64 2.011 0 .996 2.843 1.824 6.64 2.011v7.12h3.845v-7.12c3.797-.187 6.64-1.015 6.64-2.011 0-.996-2.843-1.824-6.64-2.011zm0 3.635v-.002c-.08.006-.517.033-1.474.033-.756 0-1.297-.024-1.493-.033v.002c-3.371-.159-5.888-.782-5.888-1.533 0-.75 2.517-1.374 5.888-1.533v2.581c.2.014.749.043 1.507.043.923 0 1.384-.029 1.46-.034v-2.59c3.365.159 5.877.783 5.877 1.533 0 .751-2.512 1.374-5.877 1.533z" fill="#FFFFFF"/>
+                        </svg>
                     </div>
                     <div class="stat-title">Balance</div>
                     <div class="stat-value" id="stat-balance">0.000 USDT</div>
                 </div>
                 <div class="stat-box" onclick="switchTab('invite')">
-                    <div class="stat-icon" style="background: rgba(255,170,0,0.1);">
-                        <img src="https://img.icons8.com/fluency/48/crown.png" class="img-icon-large" alt="Referrals">
+                    <div class="stat-icon" style="color: #ffaa00; background: rgba(255,170,0,0.1); border-color: rgba(255,170,0,0.2);">
+                        <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/></svg>
                     </div>
                     <div class="stat-title">Referrals</div>
                     <div class="stat-value">0 Friends</div>
                 </div>
                 <div class="stat-box" onclick="switchTab('missions')">
                     <div class="stat-icon">
-                        <img src="https://img.icons8.com/fluency/48/shield.png" class="img-icon-large" alt="Missions">
+                        <svg class="svg-icon-large" viewBox="0 0 24 24" style="fill: var(--accent);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                     </div>
                     <div class="stat-title">Missions</div>
                     <div class="stat-value">0 Completed</div>
@@ -205,17 +218,25 @@
                     <div class="watch-text">Watch Ad · +0.001 USDT</div>
                     <div class="watch-sub">Ads for next withdraw: 3/3</div>
                 </div>
-                <button class="btn" style="width: auto; padding: 12px 18px; font-size: 13px;" onclick="alert('Ad system coming soon!')">▶ Watch</button>
+                <button class="btn" style="width: auto; padding: 12px 18px; font-size: 13px;" onclick="alert('Ad system coming soon!')">
+                    <svg class="svg-icon-small" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Watch
+                </button>
             </div>
 
             <div class="card explore-card" onclick="switchTab('missions')">
                 <div class="explore-left">
                     <div class="explore-title">Explore & Earn USDT</div>
                     <div class="explore-text">Complete verified missions to unlock instant rewards and USDT (BEP-20) payouts.</div>
-                    <button class="btn" style="width: auto; padding: 10px 15px; font-size: 13px;">Start Missions →</button>
+                    <button class="btn" style="width: auto; padding: 10px 15px; font-size: 13px;">
+                        Start Missions 
+                        <svg class="svg-icon-small" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </button>
                 </div>
                 <div class="explore-icon">
-                    <img src="https://img.icons8.com/color/96/tether--v1.png" class="img-icon-large" style="width: 40px; height: 40px;" alt="USDT">
+                    <svg class="svg-icon-large" viewBox="0 0 32 32" style="fill: #26A17B; width: 40px; height: 40px; filter: drop-shadow(0 0 8px rgba(38,161,123,0.5));">
+                        <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                        <path d="M17.922 13.858v-2.331h4.585V8.031H9.492v3.496h4.585v2.331c-3.797.187-6.64 1.015-6.64 2.011 0 .996 2.843 1.824 6.64 2.011v7.12h3.845v-7.12c3.797-.187 6.64-1.015 6.64-2.011 0-.996-2.843-1.824-6.64-2.011zm0 3.635v-.002c-.08.006-.517.033-1.474.033-.756 0-1.297-.024-1.493-.033v.002c-3.371-.159-5.888-.782-5.888-1.533 0-.75 2.517-1.374 5.888-1.533v2.581c.2.014.749.043 1.507.043.923 0 1.384-.029 1.46-.034v-2.59c3.365.159 5.877.783 5.877 1.533 0 .751-2.512 1.374-5.877 1.533z" fill="#FFFFFF"/>
+                    </svg>
                 </div>
             </div>
 
@@ -223,23 +244,23 @@
                 <div class="quick-title">QUICK NAVIGATION</div>
                 <div class="nav-item-card" onclick="switchTab('missions')">
                     <div class="nav-icon-box bg-blue">
-                        <img src="https://img.icons8.com/fluency/48/task.png" class="img-icon" alt="Missions">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                     </div>
                     <div class="nav-text-box">
                         <div class="nav-title">Verified Missions</div>
                         <div class="nav-sub">Subscribe to partner channels & earn USDT</div>
                     </div>
-                    <div style="color: #555; font-size: 20px;">›</div>
+                    <svg class="svg-icon-small" style="fill: #555;" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                 </div>
                 <div class="nav-item-card" onclick="switchTab('invite')">
                     <div class="nav-icon-box bg-purple">
-                        <img src="https://img.icons8.com/fluency/48/gift.png" class="img-icon" alt="Invite">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
                     </div>
                     <div class="nav-text-box">
                         <div class="nav-title">Affiliate Program</div>
                         <div class="nav-sub">Invite friends & earn bonus when they finish tasks</div>
                     </div>
-                    <div style="color: #555; font-size: 20px;">›</div>
+                    <svg class="svg-icon-small" style="fill: #555;" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                 </div>
             </div>
         </div>
@@ -248,9 +269,10 @@
         <div id="page-missions" class="page">
             <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 700; letter-spacing: 1px;">MISSIONS</h3>
             <div class="quick-nav">
+                <!-- আপনার চ্যানেল এখানে যোগ করা হয়েছে -->
                 <div class="nav-item-card">
                     <div class="nav-icon-box bg-blue">
-                        <img src="https://img.icons8.com/color/48/telegram-app.png" class="img-icon" alt="Telegram">
+                        <svg class="svg-icon" viewBox="0 0 24 24" style="fill: #4facfe;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
                     </div>
                     <div class="nav-text-box">
                         <div class="nav-title">Join SABX Earn BD</div>
@@ -288,8 +310,10 @@
                 <div class="balance-amount" style="justify-content: center; font-size: 36px;">$0.00</div>
                 <div style="text-align: center; margin-bottom: 25px;">
                     <span style="background: #000; border: 1px solid #333; padding: 5px 12px; border-radius: 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
-                        <img src="https://img.icons8.com/color/48/tether--v1.png" class="img-icon-small" alt="USDT">
-                        0.000 USDT
+                        <svg class="svg-icon-small" viewBox="0 0 32 32" style="fill: #26A17B;">
+                            <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                            <path d="M17.922 13.858v-2.331h4.585V8.031H9.492v3.496h4.585v2.331c-3.797.187-6.64 1.015-6.64 2.011 0 .996 2.843 1.824 6.64 2.011v7.12h3.845v-7.12c3.797-.187 6.64-1.015 6.64-2.011 0-.996-2.843-1.824-6.64-2.011zm0 3.635v-.002c-.08.006-.517.033-1.474.033-.756 0-1.297-.024-1.493-.033v.002c-3.371-.159-5.888-.782-5.888-1.533 0-.75 2.517-1.374 5.888-1.533v2.581c.2.014.749.043 1.507.043.923 0 1.384-.029 1.46-.034v-2.59c3.365.159 5.877.783 5.877 1.533 0 .751-2.512 1.374-5.877 1.533z" fill="#FFFFFF"/>
+                        </svg> 0.000 USDT
                     </span>
                 </div>
                 <div class="action-buttons">
@@ -315,19 +339,27 @@
     <!-- ================= BOTTOM NAVIGATION ================= -->
     <div class="bottom-nav">
         <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
-            <div class="nav-icon"><img src="https://img.icons8.com/fluency/48/home.png" alt="Home"></div>
+            <div class="nav-icon">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </div>
             <div>Home</div>
         </div>
         <div class="nav-item" id="nav-missions" onclick="switchTab('missions')">
-            <div class="nav-icon"><img src="https://img.icons8.com/fluency/48/checked.png" alt="Missions"></div>
+            <div class="nav-icon">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
             <div>Missions</div>
         </div>
         <div class="nav-item" id="nav-invite" onclick="switchTab('invite')">
-            <div class="nav-icon"><img src="https://img.icons8.com/fluency/48/conference-call.png" alt="Invite"></div>
+            <div class="nav-icon">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
             <div>Invite</div>
         </div>
         <div class="nav-item" id="nav-wallet" onclick="switchTab('wallet')">
-            <div class="nav-icon"><img src="https://img.icons8.com/fluency/48/wallet.png" alt="Wallet"></div>
+            <div class="nav-icon">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </div>
             <div>Wallet</div>
         </div>
     </div>
@@ -337,7 +369,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
-                    <img src="https://img.icons8.com/color/48/tether--v1.png" class="img-icon-small" alt="USDT"> 
+                    <svg class="svg-icon-small" viewBox="0 0 32 32" style="fill: #26A17B;">
+                        <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                        <path d="M17.922 13.858v-2.331h4.585V8.031H9.492v3.496h4.585v2.331c-3.797.187-6.64 1.015-6.64 2.011 0 .996 2.843 1.824 6.64 2.011v7.12h3.845v-7.12c3.797-.187 6.64-1.015 6.64-2.011 0-.996-2.843-1.824-6.64-2.011zm0 3.635v-.002c-.08.006-.517.033-1.474.033-.756 0-1.297-.024-1.493-.033v.002c-3.371-.159-5.888-.782-5.888-1.533 0-.75 2.517-1.374 5.888-1.533v2.581c.2.014.749.043 1.507.043.923 0 1.384-.029 1.46-.034v-2.59c3.365.159 5.877.783 5.877 1.533 0 .751-2.512 1.374-5.877 1.533z" fill="#FFFFFF"/>
+                    </svg> 
                     Withdraw USDT
                 </div>
                 <div class="close-btn" onclick="closeModal('withdrawModal')">✕</div>
@@ -358,7 +393,7 @@
         </div>
     </div>
 
-    <!-- ================= HISTORY MODAL ================= -->
+    <!-- ================= HISTORY MODAL (CLEARED) ================= -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
