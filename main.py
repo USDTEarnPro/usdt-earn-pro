@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 import telebot
 import os
 
 app = Flask(__name__, template_folder='.')
-
-# আপনার টোকেন নিচে বসানো হয়েছে
+# আপনার বটের টোকেন এখানে বসানো আছে
 BOT_TOKEN = '9057837958:AAF5rqXdNflZXoejHktaVh7HLCokEUMxJEA' 
 bot = telebot.TeleBot(BOT_TOKEN)
 
