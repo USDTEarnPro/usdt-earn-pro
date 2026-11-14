@@ -8,7 +8,7 @@ from telebot import types
 app = Flask(__name__, template_folder='.')
 
 BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
-ADMIN_ID = 123456789 # এখানে আপনার টেলিগ্রাম আইডি দিন
+ADMIN_ID = 123456789 # আপনার টেলিগ্রাম আইডি
 bot = telebot.TeleBot(BOT_TOKEN)
 
 MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
@@ -32,14 +32,12 @@ def get_user():
         
         user = users_col.find_one({"user_id": user_id})
         
-        # যদি ইউজার নতুন হয়
         if not user:
             users_col.insert_one({
                 "user_id": user_id, "name": name, "balance": 0.0, 
                 "missions": 0, "joined": 0, "joined2": 0, "refs": 0
             })
             
-            # রেফারেল লজিক (নিজে নিজে রেফার করলে কাউন্ট হবে না)
             if referrer_id and referrer_id != user_id:
                 referrer = users_col.find_one({"user_id": referrer_id})
                 if referrer:
@@ -63,6 +61,18 @@ def get_user():
             "refs": int(user.get("refs", 0)), 
             "history": history_data
         })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+# নতুন রুট: ইউজারের উইথড্র হিস্ট্রি আনা
+@app.route('/api/get_withdrawals', methods=['POST'])
+def get_withdrawals():
+    try:
+        data = request.json
+        user_id = str(data.get('user_id'))
+        withdrawals = list(withdraw_col.find({"user_id": user_id}).sort("_id", -1))
+        wd_data = [{"amount": w["amount"], "status": w["status"], "time": w["time"]} for w in withdrawals]
+        return jsonify({"status": "success", "withdrawals": wd_data})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
