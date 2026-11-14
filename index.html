@@ -5,136 +5,360 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>USDT EARN PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Adsgram Script -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --bg: #040806; --card-bg: rgba(13, 26, 21, 0.8); --text: #ffffff; --accent: #00ff88; --border: rgba(0, 255, 136, 0.15); --text-muted: #7a8f86; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; -webkit-tap-highlight-color: transparent; background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.1) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(0, 255, 136, 0.05) 0%, transparent 50%); background-attachment: fixed; }
-        
-        .app-header { display: flex; justify-content: center; align-items: center; padding: 16px; background: rgba(4, 8, 6, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;}
-        .header-title { font-size: 18px; font-weight: 800; letter-spacing: 1.5px; display: flex; align-items: center; gap: 10px; color: var(--accent); text-shadow: 0 0 15px rgba(0,255,136,0.4);}
-        .header-logo { width: 26px; height: 26px; }
+        :root {
+            --bg-start: #050c0a;
+            --bg-end: #0b1a15;
+            --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+            --glass-border: rgba(110, 255, 170, 0.25);
+            --glass-shadow: 0 0 30px rgba(80, 255, 160, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            
+            --gold-border: rgba(255, 190, 60, 0.3);
+            --gold-shadow: 0 0 30px rgba(255, 190, 60, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            
+            --btn-grad: linear-gradient(135deg, #7dfba0 0%, #4fb585 100%);
+            --btn-shadow: 0 8px 24px rgba(125, 251, 160, 0.35);
+            
+            --text-main: #ffffff;
+            --text-muted: #7a8f86;
+            --accent: #00ff88;
+        }
 
-        .profile-section { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        
+        body { 
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            color: var(--text-main); 
+            padding-bottom: 100px; 
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Grid and Radial Glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 100%; height: 400px;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        @keyframes spinBorder {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        /* Base Card Style */
+        .glass-card {
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .glass-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 0 40px rgba(80, 255, 160, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .gold-card {
+            border-color: var(--gold-border);
+            box-shadow: var(--gold-shadow);
+        }
+        .gold-card:active {
+            box-shadow: 0 0 40px rgba(255, 190, 60, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Header */
+        .app-header { 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px 16px; position: sticky; top: 0; z-index: 50;
+            animation: fadeUp 0.5s ease forwards;
+        }
+        .header-title { 
+            font-size: 18px; font-weight: 800; letter-spacing: 2px; 
+            display: flex; align-items: center; gap: 10px; 
+            color: var(--accent); text-shadow: 0 0 15px rgba(0,255,136,0.5);
+        }
+        .header-logo { width: 28px; height: 28px; filter: drop-shadow(0 0 8px rgba(0,255,136,0.6)); }
+
+        /* Profile Section */
+        .profile-section { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px 20px 20px 20px;
+            animation: fadeUp 0.5s ease 0.08s forwards;
+            opacity: 0;
+        }
         .user-left { display: flex; align-items: center; gap: 14px; }
-        .avatar { width: 52px; height: 52px; border-radius: 50%; background: #000; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent); font-size: 22px; box-shadow: 0 0 15px rgba(0,255,136,0.2); }
-        .user-name { font-weight: 800; font-size: 17px; margin-bottom: 3px; line-height: 1.2;}
-        .user-username { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500;}
-        .user-status { font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 5px; font-weight: 600;}
-        .user-status::before { content: ''; display: block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent);}
+        .avatar { 
+            width: 54px; height: 54px; border-radius: 50%; 
+            background: rgba(0,0,0,0.5); border: 2px solid var(--accent); 
+            display: flex; justify-content: center; align-items: center; 
+            font-weight: 800; color: var(--accent); font-size: 22px; 
+            box-shadow: 0 0 20px rgba(0,255,136,0.3);
+        }
+        .user-name { font-weight: 700; font-size: 18px; margin-bottom: 4px; }
+        .user-username { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+        .user-status { 
+            font-size: 12px; color: var(--accent); display: flex; align-items: center; gap: 6px; 
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .user-status::before { 
+            content: ''; display: block; width: 8px; height: 8px; 
+            background: var(--accent); border-radius: 50%; 
+            animation: pulseDot 2s infinite;
+        }
         .user-right { display: flex; align-items: center; gap: 10px; }
-        .icon-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        .network-badge { background: rgba(0,255,136,0.05); border: 1px solid var(--border); color: var(--accent); padding: 7px 14px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px; font-weight: 700;}
+        .icon-btn { 
+            width: 40px; height: 40px; border-radius: 50%; 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); 
+            display: flex; justify-content: center; align-items: center; cursor: pointer; 
+        }
+        .network-badge { 
+            background: rgba(0,255,136,0.08); border: 1px solid var(--glass-border); 
+            color: var(--accent); padding: 8px 14px; border-radius: 20px; 
+            font-size: 12px; display: flex; align-items: center; gap: 6px; font-weight: 700;
+        }
 
         .container { padding: 0 20px; }
-        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page { display: none; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .main-balance-card { background: linear-gradient(160deg, rgba(15, 30, 24, 0.9) 0%, rgba(5, 10, 8, 0.9) 100%); border: 1px solid var(--border); border-top: 1px solid rgba(0, 255, 136, 0.4); border-radius: 24px; padding: 25px 22px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
-        .balance-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
-        .balance-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
-        .rate-badge { font-size: 10px; border: 1px solid var(--border); padding: 5px 10px; border-radius: 10px; color: var(--accent); background: rgba(0,255,136,0.05); font-weight: 700;}
-        .balance-amount { font-size: 48px; font-weight: 800; margin-bottom: 5px; display: flex; align-items: baseline; gap: 8px; color: #fff; letter-spacing: -1px;}
-        .balance-amount span { font-size: 20px; color: var(--accent); font-weight: 800;}
-        .usd-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; font-weight: 500;}
+        /* Main Balance Card (Animated Border) */
+        .main-balance-card { 
+            position: relative; padding: 28px 24px; margin-bottom: 24px;
+            animation: fadeUp 0.5s ease 0.16s forwards; opacity: 0;
+        }
+        .main-balance-card::before {
+            content: ''; position: absolute; inset: -1px; z-index: -1;
+            border-radius: 29px;
+            background: conic-gradient(from 0deg, transparent, var(--accent), transparent 30%);
+            animation: spinBorder 4s linear infinite;
+        }
+        .main-balance-card::after {
+            content: ''; position: absolute; inset: 0; z-index: -1;
+            border-radius: 28px; background: #081310;
+        }
+        .balance-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
+        .balance-label { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; font-weight: 700;}
+        .rate-badge { font-size: 11px; border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 12px; color: var(--text-muted); background: rgba(0,0,0,0.2); font-weight: 600;}
+        .balance-amount { font-size: 48px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: baseline; gap: 8px; color: #fff; letter-spacing: -1px;}
+        .balance-amount span { font-size: 18px; color: var(--accent); font-weight: 700; letter-spacing: 1px;}
+        .usd-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 20px; font-weight: 500;}
         
-        .action-buttons { display: flex; gap: 12px; }
-        .btn { background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%); color: #000; border: none; padding: 15px 20px; border-radius: 14px; font-weight: 800; cursor: pointer; font-size: 14px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 5px 20px rgba(0, 255, 136, 0.25); }
+        .action-buttons { display: flex; gap: 14px; }
+        
+        /* Premium Pill Buttons */
+        .btn { 
+            background: var(--btn-grad); color: #000; border: none; 
+            padding: 16px 24px; border-radius: 50px; font-weight: 800; 
+            cursor: pointer; font-size: 15px; width: 100%; 
+            display: flex; justify-content: center; align-items: center; gap: 8px; 
+            box-shadow: var(--btn-shadow); position: relative; overflow: hidden;
+            transition: 0.2s;
+        }
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: shine 3s infinite; transform: skewX(-20deg);
+        }
         .btn:active { transform: scale(0.96); }
-        .btn-outline { background: rgba(255,255,255,0.03); color: var(--text); border: 1px solid rgba(255,255,255,0.1); box-shadow: none;}
-        
-        .stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
-        .stat-box { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(10px); transition: 0.2s;}
-        .stat-box:active { transform: scale(0.95); border-color: var(--accent);}
-        .stat-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; justify-content: center; align-items: center; margin: 0 auto 10px auto; }
-        .stat-title { font-weight: 700; font-size: 13px; color: #fff;}
-        .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; font-weight: 500;}
+        .btn-outline { 
+            background: rgba(255,255,255,0.03); color: var(--text-main); 
+            border: 1px solid var(--glass-border); box-shadow: none; 
+        }
+        .btn-outline::after { display: none; }
 
-        .actions-row { display: flex; gap: 12px; margin-bottom: 20px; }
-        .action-card { flex: 1; background: linear-gradient(145deg, #0f1c18, #060d0a); border: 1px solid var(--border); border-radius: 20px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
-        .action-card:active { transform: scale(0.95); }
-        .action-icon { font-size: 24px; margin-bottom: 8px; }
-        .action-title { font-weight: 700; font-size: 12px; color: #fff; margin-bottom: 2px;}
-        .action-sub { font-size: 10px; color: var(--accent); font-weight: 600; }
+        /* 3 Stats Boxes */
+        .stats-grid { display: flex; gap: 12px; margin-bottom: 24px; }
+        .stat-box { 
+            flex: 1; padding: 20px 10px; text-align: center; cursor: pointer; 
+            animation: fadeUp 0.5s ease 0.24s forwards; opacity: 0;
+        }
+        .stat-icon { 
+            width: 56px; height: 56px; border-radius: 16px; 
+            display: flex; justify-content: center; align-items: center; 
+            margin: 0 auto 12px auto; position: relative;
+        }
+        .stat-icon svg { width: 32px; height: 32px; }
+        
+        /* Specific Icon Tints */
+        .stat-box:nth-child(1) .stat-icon { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); box-shadow: inset 0 0 15px rgba(0,255,136,0.15); }
+        .stat-box:nth-child(2) .stat-icon { background: rgba(255,190,60,0.1); border: 1px solid rgba(255,190,60,0.2); box-shadow: inset 0 0 15px rgba(255,190,60,0.15); }
+        .stat-box:nth-child(3) .stat-icon { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); box-shadow: inset 0 0 15px rgba(0,255,136,0.15); }
+        
+        .stat-title { font-weight: 700; font-size: 14px; color: #fff;}
+        .stat-value { color: var(--text-muted); font-size: 12px; margin-top: 6px; font-weight: 500;}
 
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px);}
+        /* Actions Row (Daily, Spin, Ad) */
+        .actions-row { display: flex; gap: 12px; margin-bottom: 24px; }
+        .action-card { 
+            flex: 1; padding: 18px 10px; text-align: center; cursor: pointer; 
+            animation: fadeUp 0.5s ease 0.32s forwards; opacity: 0;
+        }
+        .action-icon { font-size: 28px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));}
+        .action-title { font-weight: 700; font-size: 13px; color: #fff; margin-bottom: 4px;}
+        .action-sub { font-size: 11px; color: var(--accent); font-weight: 600;}
+
+        /* Explore Card */
+        .explore-card { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 24px; margin-bottom: 24px; cursor: pointer;
+            animation: fadeUp 0.5s ease 0.4s forwards; opacity: 0;
+        }
+        .explore-left { width: 70%; }
+        .explore-title { font-weight: 800; font-size: 20px; margin-bottom: 10px; letter-spacing: 0.5px;}
+        .explore-text { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 18px; font-weight: 400;}
+        .explore-icon { width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; }
+        .explore-icon svg { width: 100%; height: 100%; filter: drop-shadow(0 0 15px rgba(0,255,136,0.4)); }
         
-        /* এখানে আইকনের সাইজ ফিক্স করা হয়েছে */
-        .explore-icon { width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; }
-        
-        .quick-nav { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px;}
-        .quick-title { font-size: 11px; color: var(--text-muted); font-weight: 800; margin-bottom: 15px; letter-spacing: 0.5px;}
-        .nav-item-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; padding: 12px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid transparent; transition: 0.2s;}
-        .nav-item-card:active { border-color: var(--border); background: rgba(0,255,136,0.05); }
+        /* Quick Navigation */
+        .quick-nav { padding: 24px; margin-bottom: 24px; animation: fadeUp 0.5s ease 0.48s forwards; opacity: 0;}
+        .quick-title { font-size: 12px; color: var(--text-muted); font-weight: 800; margin-bottom: 18px; letter-spacing: 1.5px;}
+        .nav-item-card { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 16px; cursor: pointer; padding: 16px; 
+            border-radius: 20px; background: rgba(255,255,255,0.02); 
+            border: 1px solid transparent; transition: 0.2s;
+        }
+        .nav-item-card:active { border-color: var(--glass-border); background: rgba(0,255,136,0.05); }
         .nav-item-card:last-child { margin-bottom: 0; }
-        .nav-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
-        .bg-blue { background: #0e2a3b; }
-        .bg-purple { background: #2b1433; }
-        .nav-text-box { flex: 1; margin-left: 15px; }
-        .nav-title { font-weight: 700; font-size: 14px; margin-bottom: 3px;}
-        .nav-sub { font-size: 11px; color: var(--text-muted); font-weight: 500;}
+        .nav-icon-box { width: 44px; height: 44px; border-radius: 14px; display: flex; justify-content: center; align-items: center; }
+        .bg-blue { background: rgba(79, 172, 254, 0.1); color: #4facfe; border: 1px solid rgba(79, 172, 254, 0.2);}
+        .bg-purple { background: rgba(184, 77, 254, 0.1); color: #b84dfe; border: 1px solid rgba(184, 77, 254, 0.2);}
+        .nav-text-box { flex: 1; margin-left: 16px; }
+        .nav-title { font-weight: 700; font-size: 15px; margin-bottom: 4px;}
+        .nav-sub { font-size: 12px; color: var(--text-muted); font-weight: 400;}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(4, 8, 6, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid #111; z-index: 100; }
-        .nav-item { text-align: center; color: #4a5b54; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: 600;}
-        .nav-item.active { color: var(--accent); text-shadow: 0 0 10px rgba(0,255,136,0.4);}
-        .nav-icon { font-size: 24px; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; width: 30px; height: 30px;}
-        .nav-icon svg { width: 26px; height: 26px; fill: currentColor; }
+        /* Bottom Navigation */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: rgba(5, 12, 10, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; padding: 16px 0 28px 0; 
+            border-top: 1px solid rgba(255,255,255,0.05); z-index: 100; 
+        }
+        .nav-item { text-align: center; color: #4a5b54; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.3s; font-weight: 600;}
+        .nav-icon { 
+            font-size: 24px; margin-bottom: 4px; 
+            display: flex; justify-content: center; align-items: center; 
+            width: 50px; height: 32px; border-radius: 20px; transition: 0.3s;
+        }
+        .nav-icon svg { width: 24px; height: 24px; fill: currentColor; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item.active .nav-icon { 
+            background: rgba(0, 255, 136, 0.15); 
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            color: var(--accent);
+        }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: linear-gradient(160deg, #0d1814, #060a08); width: 90%; max-width: 400px; border-radius: 24px; padding: 25px; border: 1px solid var(--border); animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-height: 80vh; overflow-y: auto;}
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .modal-title { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 10px;}
-        .close-btn { cursor: pointer; color: #888; font-size: 18px; background: #1a1a1a; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; border-radius: 50%;}
+        /* Modals */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
+            display: none; justify-content: center; align-items: center; z-index: 1000; 
+        }
+        .modal-content { 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); 
+            width: 90%; max-width: 400px; border-radius: 28px; padding: 28px; 
+            animation: fadeUp 0.3s ease; box-shadow: var(--glass-shadow); max-height: 80vh; overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-title { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 10px;}
+        .close-btn { cursor: pointer; color: var(--text-muted); font-size: 20px; background: rgba(255,255,255,0.05); width: 36px; height: 36px; display: flex; justify-content: center; align-items: center; border-radius: 50%;}
         
-        .input-group { margin-bottom: 15px; }
-        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 600;}
-        .modal-input { width: 100%; padding: 16px; background: #000; color: #fff; border: 1px solid #333; border-radius: 14px; font-size: 14px; outline: none; transition: 0.2s;}
-        .modal-input:focus { border-color: var(--accent); }
-        .warning-text { font-size: 11px; color: #ffaa00; margin-bottom: 20px; line-height: 1.6; background: rgba(255,170,0,0.05); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,170,0,0.1);}
+        .input-group { margin-bottom: 18px; }
+        .input-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+        .modal-input { width: 100%; padding: 16px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; font-size: 15px; outline: none; transition: 0.2s;}
+        .modal-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(0,255,136,0.2);}
+        .warning-text { font-size: 12px; color: #ffaa00; margin-bottom: 24px; line-height: 1.6; background: rgba(255,170,0,0.05); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,170,0,0.15);}
         
-        .invite-box { background: #060a08; border: 1px solid #333; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .invite-link { font-size: 12px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 85%; font-weight: 600;}
-        .copy-icon { color: #888; cursor: pointer; }
+        .invite-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .invite-link { font-size: 13px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 85%; font-weight: 600;}
+        .copy-icon { color: var(--text-muted); cursor: pointer; font-size: 18px; }
 
-        .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1a1a1a; }
+        .history-item { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .history-left { text-align: left; }
-        .history-title { font-weight: 700; font-size: 14px; color: #fff; }
-        .history-time { font-size: 10px; color: #555; margin-top: 4px; }
-        .history-amount { color: var(--accent); font-weight: 800; font-size: 14px; background: #0d2219; padding: 4px 10px; border-radius: 8px; height: fit-content;}
+        .history-title { font-weight: 700; font-size: 15px; color: #fff; }
+        .history-time { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+        .history-amount { color: var(--accent); font-weight: 800; font-size: 15px; background: rgba(0,255,136,0.1); padding: 6px 12px; border-radius: 10px; height: fit-content; border: 1px solid rgba(0,255,136,0.2);}
 
-        .custom-toast { position: fixed; top: 10%; left: 50%; transform: translateX(-50%) translateY(-20px); background: rgba(30, 40, 35, 0.95); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border: 1px solid rgba(255, 255, 255, 0.1); z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s ease; }
-        .custom-toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .toast-icon { font-size: 20px; filter: drop-shadow(0 0 5px rgba(255,170,0,0.5)); }
-        .toast-text { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px;}
-
-        .status-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 15px; margin-bottom: 10px; }
-        .status-left { display: flex; align-items: center; gap: 12px; }
-        .status-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
-        .status-icon-pending { background: linear-gradient(135deg, rgba(255,170,0,0.15), rgba(255,100,0,0.15)); border: 1px solid rgba(255,170,0,0.3); }
-        .status-icon-paid { background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,200,100,0.15)); border: 1px solid rgba(0,255,136,0.3); }
+        /* Withdraw Status Card */
+        .status-card { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 20px; padding: 16px; margin-bottom: 12px; 
+        }
+        .status-left { display: flex; align-items: center; gap: 14px; }
+        .status-icon-box { width: 44px; height: 44px; border-radius: 14px; display: flex; justify-content: center; align-items: center; }
+        .status-icon-pending { background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.3); box-shadow: inset 0 0 15px rgba(255,170,0,0.1);}
+        .status-icon-paid { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); box-shadow: inset 0 0 15px rgba(0,255,136,0.1);}
         .status-amount { font-weight: 800; font-size: 16px; color: #fff; }
-        .status-date { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+        .status-date { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
         .status-badge { font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge-pending { color: #ffaa00; background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.2); box-shadow: 0 0 10px rgba(255,170,0,0.1);}
-        .badge-paid { color: var(--accent); background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); box-shadow: 0 0 10px rgba(0,255,136,0.1);}
+        .badge-pending { color: #ffaa00; background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.2);}
+        .badge-paid { color: var(--accent); background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2);}
 
-        .lb-item { display: flex; justify-content: space-between; padding: 10px 15px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .lb-rank { font-weight: 800; color: #ffaa00; margin-right: 10px; }
+        /* Leaderboard */
+        .lb-item { display: flex; justify-content: space-between; padding: 14px 16px; background: rgba(255,255,255,0.02); border-radius: 16px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .lb-rank { font-weight: 800; color: #ffaa00; margin-right: 12px; }
         .lb-name { font-weight: 600; color: #fff; flex: 1;}
         .lb-refs { font-weight: 800; color: var(--accent); }
 
-        .custom-alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 9999; }
-        .custom-alert-box { background: linear-gradient(160deg, #0d1814, #060a08); border: 1px solid rgba(255, 170, 0, 0.4); width: 85%; max-width: 320px; border-radius: 24px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .alert-icon { font-size: 45px; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.5)); }
-        .alert-title { font-size: 20px; font-weight: 800; color: #ffaa00; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.4); letter-spacing: 0.5px;}
-        .alert-message { font-size: 14px; color: #a0b0a8; line-height: 1.6; margin-bottom: 25px; font-weight: 500;}
-        .alert-btn { background: linear-gradient(135deg, #ffaa00 0%, #ff8800 100%); color: #000; border: none; padding: 14px 20px; border-radius: 12px; font-weight: 800; font-size: 15px; width: 100%; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3); transition: 0.2s; }
-        .alert-btn:active { transform: scale(0.96); box-shadow: 0 2px 5px rgba(255, 170, 0, 0.2); }
+        /* Toast & Alerts */
+        .custom-toast { 
+            position: fixed; top: 10%; left: 50%; transform: translateX(-50%) translateY(-20px); 
+            background: rgba(15, 26, 21, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+            padding: 14px 28px; border-radius: 50px; display: flex; align-items: center; gap: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1); 
+            border: 1px solid var(--glass-border); z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s ease; 
+        }
+        .custom-toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .toast-icon { font-size: 22px; }
+        .toast-text { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px;}
+
+        .custom-alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 9999; }
+        .custom-alert-box { background: var(--glass-bg); border: 1px solid var(--gold-border); width: 85%; max-width: 340px; border-radius: 28px; padding: 32px 24px; text-align: center; box-shadow: var(--gold-shadow); animation: fadeUp 0.3s ease; }
+        .alert-icon { font-size: 48px; margin-bottom: 18px; filter: drop-shadow(0 0 15px rgba(255, 170, 0, 0.5)); }
+        .alert-title { font-size: 22px; font-weight: 800; color: #ffaa00; margin-bottom: 12px; letter-spacing: 0.5px;}
+        .alert-message { font-size: 15px; color: #a0b0a8; line-height: 1.6; margin-bottom: 28px; font-weight: 500;}
+        .alert-btn { background: linear-gradient(135deg, #ffaa00 0%, #ff8800 100%); color: #000; border: none; padding: 16px 24px; border-radius: 50px; font-weight: 800; font-size: 16px; width: 100%; cursor: pointer; box-shadow: 0 8px 24px rgba(255, 170, 0, 0.3); transition: 0.2s;}
     </style>
 </head>
 <body>
@@ -182,7 +406,8 @@
 
     <div class="container">
         <div id="page-home" class="page active">
-            <div class="main-balance-card">
+            
+            <div class="main-balance-card glass-card">
                 <div class="balance-top">
                     <div class="balance-label">Available USDT Balance</div>
                     <div class="rate-badge">1 USDT ≈ $1.00</div>
@@ -199,11 +424,10 @@
             </div>
 
             <div class="stats-grid">
-                <div class="stat-box" onclick="switchTab('wallet')">
+                <div class="stat-box glass-card" onclick="switchTab('wallet')">
                     <div class="stat-icon">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#usdtBg)" stroke="#00ff88" stroke-width="2"/>
-                            <circle cx="50" cy="50" r="30" fill="#1a8d5a" />
+                            <circle cx="50" cy="50" r="45" fill="#1a8d5a" />
                             <path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" />
                             <ellipse cx="50" cy="55" rx="22" ry="8" stroke="#ffffff" stroke-width="2" fill="none" />
                         </svg>
@@ -211,46 +435,24 @@
                     <div class="stat-title">Balance</div>
                     <div class="stat-value" id="stat-balance">0.000 USDT</div>
                 </div>
-                <div class="stat-box" onclick="switchTab('invite')">
+                <div class="stat-box glass-card" onclick="switchTab('invite')">
                     <div class="stat-icon">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#crownBg)" stroke="#d4af37" stroke-width="2"/>
-                            <path d="M30 65 L70 65 L75 40 L60 50 L50 30 L40 50 L25 40 Z" fill="url(#goldGrad)" />
+                            <path d="M30 65 L70 65 L75 40 L60 50 L50 30 L40 50 L25 40 Z" fill="#ffd700" />
                             <circle cx="50" cy="30" r="4" fill="#ffdf73" />
                             <circle cx="25" cy="40" r="3" fill="#ffdf73" />
                             <circle cx="75" cy="40" r="3" fill="#ffdf73" />
                             <rect x="30" y="65" width="40" height="5" fill="#ffdf73" rx="2" />
-                            <defs>
-                                <linearGradient id="crownBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#4a3b1c" />
-                                    <stop offset="100%" stop-color="#1f170a" />
-                                </linearGradient>
-                                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stop-color="#ffe066" />
-                                    <stop offset="100%" stop-color="#cc9900" />
-                                </linearGradient>
-                            </defs>
                         </svg>
                     </div>
                     <div class="stat-title">Referrals</div>
                     <div class="stat-value" id="ref-count">0 Friends</div>
                 </div>
-                <div class="stat-box" onclick="switchTab('missions')">
+                <div class="stat-box glass-card" onclick="switchTab('missions')">
                     <div class="stat-icon">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#shieldBg)" stroke="#00ff88" stroke-width="2"/>
-                            <path d="M50 25 L75 35 V55 C75 70 50 80 50 80 C50 80 25 70 25 55 V35 L50 25 Z" fill="url(#shieldGrad)" />
-                            <path d="M42 52 L48 58 L58 45" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                            <defs>
-                                <linearGradient id="shieldBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#0f3d28" />
-                                    <stop offset="100%" stop-color="#05150d" />
-                                </linearGradient>
-                                <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stop-color="#00ff88" />
-                                    <stop offset="100%" stop-color="#00a858" />
-                                </linearGradient>
-                            </defs>
+                            <path d="M50 25 L75 35 V55 C75 70 50 80 50 80 C50 80 25 70 25 55 V35 L50 25 Z" fill="#00ff88" />
+                            <path d="M42 52 L48 58 L58 45" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                         </svg>
                     </div>
                     <div class="stat-title">Missions</div>
@@ -259,40 +461,39 @@
             </div>
 
             <div class="actions-row">
-                <div class="action-card" onclick="claimDailyBonus()">
+                <div class="action-card glass-card gold-card" onclick="claimDailyBonus()">
                     <div class="action-icon">🎁</div>
                     <div class="action-title">Daily Bonus</div>
                     <div class="action-sub">+0.001 USDT</div>
                 </div>
-                <div class="action-card" onclick="spinWheel()">
+                <div class="action-card glass-card gold-card" onclick="spinWheel()">
                     <div class="action-icon">🎰</div>
                     <div class="action-title">Spin & Win</div>
                     <div class="action-sub">Up to 0.005</div>
                 </div>
-                <div class="action-card" onclick="watchAd()">
+                <div class="action-card glass-card gold-card" onclick="watchAd()">
                     <div class="action-icon">📺</div>
                     <div class="action-title">Watch Ad</div>
                     <div class="action-sub">+0.001 USDT</div>
                 </div>
             </div>
 
-            <div class="card explore-card" onclick="switchTab('missions')">
+            <div class="explore-card glass-card" onclick="switchTab('missions')">
                 <div class="explore-left">
                     <div class="explore-title">Explore & Earn USDT</div>
                     <div class="explore-text">Complete verified missions to unlock instant rewards and USDT (BEP-20) payouts.</div>
-                    <button class="btn" style="width: auto; padding: 10px 15px; font-size: 13px;">Start Missions →</button>
+                    <button class="btn" style="width: auto; padding: 12px 20px; font-size: 14px;">Start Missions →</button>
                 </div>
                 <div class="explore-icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="5" y="5" width="90" height="90" rx="25" fill="url(#usdtBg)" stroke="#00ff88" stroke-width="2"/>
-                        <circle cx="50" cy="50" r="30" fill="#1a8d5a" />
+                        <circle cx="50" cy="50" r="45" fill="#1a8d5a" />
                         <path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" />
                         <ellipse cx="50" cy="55" rx="22" ry="8" stroke="#ffffff" stroke-width="2" fill="none" />
                     </svg>
                 </div>
             </div>
 
-            <div class="quick-nav">
+            <div class="quick-nav glass-card">
                 <div class="quick-title">QUICK NAVIGATION</div>
                 <div class="nav-item-card" onclick="switchTab('missions')">
                     <div class="nav-icon-box bg-blue">
@@ -318,8 +519,8 @@
         </div>
 
         <div id="page-missions" class="page">
-            <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(0,255,136,0.4);">MISSIONS</h3>
-            <div class="quick-nav">
+            <h3 style="text-align: center; margin-bottom: 24px; color: var(--accent); font-weight: 800; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(0,255,136,0.5);">MISSIONS</h3>
+            <div class="quick-nav glass-card">
                 <div class="nav-item-card" id="mission-sabx">
                     <div class="nav-icon-box bg-blue">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#4facfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
@@ -328,9 +529,9 @@
                         <div class="nav-title">Join SABX Earn BD</div>
                         <div class="nav-sub" style="color: var(--accent); font-weight: 700;">+0.010 USDT</div>
                     </div>
-                    <button id="join-btn" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px;" onclick="joinChannel()">Join</button>
-                    <button id="verify-btn" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px; display: none; background: #ffaa00; color: #000;" onclick="verifyChannel()">Verify</button>
-                    <div id="claimed-text" style="display: none; color: var(--accent); font-weight: 700; font-size: 12px;">Claimed 🏆</div>
+                    <button id="join-btn" class="btn" style="width: auto; padding: 10px 18px; font-size: 13px;" onclick="joinChannel()">Join</button>
+                    <button id="verify-btn" class="btn" style="width: auto; padding: 10px 18px; font-size: 13px; display: none; background: #ffaa00; color: #000; box-shadow: 0 8px 24px rgba(255,170,0,0.3);" onclick="verifyChannel()">Verify</button>
+                    <div id="claimed-text" style="display: none; color: var(--accent); font-weight: 800; font-size: 13px;">Claimed 🏆</div>
                 </div>
 
                 <div class="nav-item-card" id="mission-new">
@@ -341,33 +542,33 @@
                         <div class="nav-title">Join SX EARN PRO</div>
                         <div class="nav-sub" style="color: var(--accent); font-weight: 700;">+0.010 USDT</div>
                     </div>
-                    <button id="join-btn2" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px;" onclick="joinChannel2()">Join</button>
-                    <button id="verify-btn2" class="btn" style="width: auto; padding: 8px 15px; font-size: 12px; display: none; background: #ffaa00; color: #000;" onclick="verifyChannel2()">Verify</button>
-                    <div id="claimed-text2" style="display: none; color: var(--accent); font-weight: 700; font-size: 12px;">Claimed 🏆</div>
+                    <button id="join-btn2" class="btn" style="width: auto; padding: 10px 18px; font-size: 13px;" onclick="joinChannel2()">Join</button>
+                    <button id="verify-btn2" class="btn" style="width: auto; padding: 10px 18px; font-size: 13px; display: none; background: #ffaa00; color: #000; box-shadow: 0 8px 24px rgba(255,170,0,0.3);" onclick="verifyChannel2()">Verify</button>
+                    <div id="claimed-text2" style="display: none; color: var(--accent); font-weight: 800; font-size: 13px;">Claimed 🏆</div>
                 </div>
             </div>
         </div>
 
         <div id="page-invite" class="page">
-            <div class="main-balance-card" style="padding: 25px;">
-                <div class="explore-title" style="margin-bottom: 5px;">Invite & Earn 🎁</div>
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Grow the community using your personal Mini App link.</p>
+            <div class="main-balance-card glass-card" style="padding: 28px;">
+                <div class="explore-title" style="margin-bottom: 8px;">Invite & Earn 🎁</div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Grow the community using your personal Mini App link.</p>
                 
-                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-                    <div style="flex: 1; background: linear-gradient(145deg, rgba(0,255,136,0.1), rgba(0,0,0,0.2)); border: 1px solid var(--border); border-radius: 16px; padding: 15px; text-align: center; box-shadow: inset 0 0 20px rgba(0,255,136,0.05);">
-                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;">Your Referrals</div>
-                        <div style="font-size: 24px; font-weight: 800; color: #fff; text-shadow: 0 0 10px rgba(0,255,136,0.3);" id="invite-ref-count">0</div>
+                <div style="display: flex; gap: 14px; margin-bottom: 24px;">
+                    <div style="flex: 1; background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 16px; text-align: center; box-shadow: inset 0 0 20px rgba(0,255,136,0.05);">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Your Referrals</div>
+                        <div style="font-size: 28px; font-weight: 800; color: #fff; text-shadow: 0 0 15px rgba(0,255,136,0.4);" id="invite-ref-count">0</div>
                     </div>
-                    <div style="flex: 1; background: linear-gradient(145deg, rgba(255,170,0,0.1), rgba(0,0,0,0.2)); border: 1px solid rgba(255,170,0,0.3); border-radius: 16px; padding: 15px; text-align: center; box-shadow: inset 0 0 20px rgba(255,170,0,0.05);">
-                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;">Per Refer</div>
-                        <div style="font-size: 24px; font-weight: 800; color: #ffaa00; text-shadow: 0 0 10px rgba(255,170,0,0.3);">+0.05</div>
+                    <div style="flex: 1; background: rgba(255,190,60,0.05); border: 1px solid rgba(255,190,60,0.2); border-radius: 20px; padding: 16px; text-align: center; box-shadow: inset 0 0 20px rgba(255,190,60,0.05);">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Per Refer</div>
+                        <div style="font-size: 28px; font-weight: 800; color: #ffaa00; text-shadow: 0 0 15px rgba(255,170,0,0.4);">+0.05</div>
                     </div>
                 </div>
 
-                <div style="border: 1px solid var(--border); border-radius: 14px; padding: 15px; margin-bottom: 20px; background: rgba(0,255,136,0.03);">
-                    <div style="color: var(--accent); font-size: 11px; font-weight: 800; margin-bottom: 10px;">🏆 TOP REFERRERS LEADERBOARD</div>
+                <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 20px; margin-bottom: 24px; background: rgba(0,0,0,0.2);">
+                    <div style="color: var(--accent); font-size: 12px; font-weight: 800; margin-bottom: 14px; letter-spacing: 1px;">🏆 TOP REFERRERS LEADERBOARD</div>
                     <div id="leaderboard-list">
-                        <div style="text-align: center; font-size: 12px; color: var(--text-muted);">Loading...</div>
+                        <div style="text-align: center; font-size: 13px; color: var(--text-muted);">Loading...</div>
                     </div>
                 </div>
 
@@ -380,12 +581,12 @@
         </div>
 
         <div id="page-wallet" class="page">
-            <div class="main-balance-card">
-                <div class="balance-label" style="text-align: center; margin-bottom: 10px;">Estimated Portfolio Value</div>
-                <div class="balance-amount" id="wallet-balance" style="justify-content: center; font-size: 38px;">$0.00</div>
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <span style="background: #000; border: 1px solid #333; padding: 6px 14px; border-radius: 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
-                        <svg width="14" height="14" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#26A17B"/><path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" /></svg>
+            <div class="main-balance-card glass-card">
+                <div class="balance-label" style="text-align: center; margin-bottom: 12px;">Estimated Portfolio Value</div>
+                <div class="balance-amount" id="wallet-balance" style="justify-content: center; font-size: 42px;">$0.00</div>
+                <div style="text-align: center; margin-bottom: 28px;">
+                    <span style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 8px 18px; border-radius: 20px; font-size: 14px; display: inline-flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#26A17B"/><path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" /></svg>
                         <span id="wallet-usdt">0.000 USDT</span>
                     </span>
                 </div>
@@ -395,17 +596,17 @@
                 </div>
             </div>
             
-            <div class="quick-nav">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="quick-nav glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <div class="quick-title" style="margin: 0;">WITHDRAWAL REQUESTS</div>
-                    <div style="color: var(--accent); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
+                    <div style="color: var(--accent); font-size: 13px; font-weight: 700; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
                 </div>
                 
                 <div id="withdraw-status-list">
-                    <div style="text-align: center; padding: 20px 0;">
-                        <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
-                        <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
-                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT payout history will appear here</div>
+                    <div style="text-align: center; padding: 24px 0;">
+                        <div style="font-size: 36px; color: rgba(255,255,255,0.1); margin-bottom: 16px;">⏱</div>
+                        <div style="font-weight: 700; font-size: 15px; color: #fff;">No Withdrawals Recorded</div>
+                        <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Your USDT payout history will appear here</div>
                     </div>
                 </div>
             </div>
@@ -435,7 +636,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
-                    <svg width="20" height="20" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#26A17B"/><path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" /></svg>
+                    <svg width="24" height="24" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#26A17B"/><path d="M55 65 V45 H65 V38 H35 V45 H45 V65 H55 Z" fill="#ffffff" /></svg>
                     Withdraw USDT
                 </div>
                 <div class="close-btn" onclick="closeModal('withdrawModal')">✕</div>
@@ -450,7 +651,7 @@
             </div>
             <div class="warning-text">
                 Min 0.01 · Max 0.5 USDT · Fee 10%<br>
-                <span style="color: #ff4444; font-weight: bold;">⚠️ Requires 10 Active Referrals to unlock!</span>
+                <span style="color: #ff4444; font-weight: bold; margin-top: 8px; display: inline-block;">⚠️ Requires 10 Active Referrals to unlock!</span>
             </div>
             <button class="btn" onclick="submitWithdraw()">Confirm Cashout</button>
         </div>
@@ -464,9 +665,9 @@
             </div>
             <div id="history-list" style="padding: 10px 0;">
                 <div style="text-align: center; padding: 40px 0;">
-                    <div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div>
+                    <div style="font-size: 40px; color: rgba(255,255,255,0.1); margin-bottom: 16px;">📄</div>
                     <div style="font-weight: 700; font-size: 15px;">No History Found</div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your payout history will appear here.</div>
+                    <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Your payout history will appear here.</div>
                 </div>
             </div>
         </div>
@@ -485,7 +686,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
-        // আপনার নতুন Block ID এখানে সেট করা আছে
+        // আপনার Block ID
         const adController = window.Adsgram.init({ blockId: "59656" });
 
         let userId = null;
@@ -508,7 +709,6 @@
         if (user) {
             userId = user.id;
             document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            document.getElementById('user-username').innerText = user.username ? '@' + user.username : '';
             document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
             document.getElementById('ref-link').innerText = `https://t.me/${BOT_USERNAME}?startapp=${user.id}`;
             
@@ -607,7 +807,7 @@
                         </div>
                     `).join('');
                 } else {
-                    list.innerHTML = `<div style="text-align: center; font-size: 12px; color: var(--text-muted);">No referrals yet.</div>`;
+                    list.innerHTML = `<div style="text-align: center; font-size: 13px; color: var(--text-muted);">No referrals yet.</div>`;
                 }
             });
         }
@@ -735,7 +935,7 @@
             .then(data => {
                 const container = document.getElementById('withdraw-status-list');
                 if (data.withdrawals.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px 0;"><div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div><div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT payout history will appear here</div></div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 24px 0;"><div style="font-size: 36px; color: rgba(255,255,255,0.1); margin-bottom: 16px;">⏱</div><div style="font-weight: 700; font-size: 15px; color: #fff;">No Withdrawals Recorded</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Your USDT payout history will appear here</div></div>`;
                     return;
                 }
                 
@@ -743,7 +943,7 @@
                     const isPending = w.status === 'Pending';
                     const badgeClass = isPending ? 'badge-pending' : 'badge-paid';
                     const iconClass = isPending ? 'status-icon-pending' : 'status-icon-paid';
-                    const iconSVG = isPending ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ffaa00"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="#00ff88"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+                    const iconSVG = isPending ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="#ffaa00"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="#00ff88"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
                     
                     return `<div class="status-card"><div class="status-left"><div class="status-icon-box ${iconClass}">${iconSVG}</div><div><div class="status-amount">${w.amount.toFixed(3)} USDT</div><div class="status-date">${w.time}</div></div></div><div class="status-badge ${badgeClass}">${w.status}</div></div>`;
                 }).join('');
@@ -836,7 +1036,7 @@
         function renderHistory(historyArray) {
             const list = document.getElementById('history-list');
             if (!historyArray || historyArray.length === 0) {
-                list.innerHTML = `<div style="text-align: center; padding: 40px 0;"><div style="font-size: 40px; color: #333; margin-bottom: 15px;">📄</div><div style="font-weight: 700; font-size: 15px;">No History Found</div></div>`;
+                list.innerHTML = `<div style="text-align: center; padding: 40px 0;"><div style="font-size: 40px; color: rgba(255,255,255,0.1); margin-bottom: 16px;">📄</div><div style="font-weight: 700; font-size: 15px;">No History Found</div></div>`;
                 return;
             }
             list.innerHTML = historyArray.map(item => `
