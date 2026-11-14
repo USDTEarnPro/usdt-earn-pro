@@ -482,8 +482,8 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
-        // আপনার আসল Block ID এখানে সেট করা আছে
-        const adController = window.Adsgram.init({ blockId: "59573" });
+        // আপনার নতুন Block ID এখানে সেট করা আছে
+        const adController = window.Adsgram.init({ blockId: "59656" });
 
         let userId = null;
         let currentBalance = 0.000;
@@ -648,7 +648,6 @@
             }, 1500);
         }
 
-        // Adsgram Ad Watch Function (সঠিকভাবে সেট করা)
         async function watchAd() {
             try {
                 const result = await adController.show();
