@@ -128,7 +128,7 @@ def spin_wheel():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# নতুন রুট: অ্যাড দেখলে রিওয়ার্ড
+# অ্যাড দেখার পর ফ্রন্টএন্ড থেকে কল হবে
 @app.route('/api/add_ad_reward', methods=['POST'])
 def add_ad_reward():
     try:
@@ -142,6 +142,20 @@ def add_ad_reward():
         return jsonify({"status": "success", "message": f"Ad reward claimed! +{reward} USDT added."})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
+
+# Adsgram সার্ভার থেকে সিকিউর ভেরিফিকেশনের জন্য (যদি ড্যাশবোর্ডে Reward URL সেট করেন)
+@app.route('/api/adsgram_reward')
+def adsgram_reward():
+    try:
+        user_id = request.args.get('userid')
+        if user_id:
+            reward = 0.001
+            users_col.update_one({"user_id": user_id}, {"$inc": {"balance": reward}})
+            history_col.insert_one({"user_id": user_id, "task": "Watched Video Ad (Secure)", "amount": reward, "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
+            return "OK", 200
+        return "Invalid Request", 400
+    except Exception as e:
+        return str(e), 500
 
 @app.route('/api/verify_mission', methods=['POST'])
 def verify_mission():
