@@ -99,6 +99,38 @@
         .history-time { font-size: 10px; color: #555; margin-top: 4px; }
         .history-amount { color: var(--accent); font-weight: 800; font-size: 14px; background: #0d2219; padding: 4px 10px; border-radius: 8px; height: fit-content;}
 
+        /* Premium Toast (Floating Message) */
+        .custom-toast { 
+            position: fixed; top: 10%; left: 50%; transform: translateX(-50%) translateY(-20px); 
+            background: rgba(30, 40, 35, 0.95); backdrop-filter: blur(10px);
+            padding: 12px 25px; border-radius: 30px; display: flex; align-items: center; gap: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.1); z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s ease;
+        }
+        .custom-toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .toast-icon { font-size: 20px; filter: drop-shadow(0 0 5px rgba(255,170,0,0.5)); }
+        .toast-text { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px;}
+
+        /* Withdraw Status Card Style */
+        .status-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; padding: 15px; margin-bottom: 10px;
+        }
+        .status-left { display: flex; align-items: center; gap: 12px; }
+        .status-icon-box {
+            width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center;
+        }
+        .status-icon-pending { background: linear-gradient(135deg, rgba(255,170,0,0.15), rgba(255,100,0,0.15)); border: 1px solid rgba(255,170,0,0.3); }
+        .status-icon-paid { background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,200,100,0.15)); border: 1px solid rgba(0,255,136,0.3); }
+        .status-amount { font-weight: 800; font-size: 16px; color: #fff; }
+        .status-date { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+        .status-badge {
+            font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .badge-pending { color: #ffaa00; background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.2); box-shadow: 0 0 10px rgba(255,170,0,0.1);}
+        .badge-paid { color: var(--accent); background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); box-shadow: 0 0 10px rgba(0,255,136,0.1);}
+
         /* Premium Alert Modal CSS */
         .custom-alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 9999; }
         .custom-alert-box { background: linear-gradient(160deg, #0d1814, #060a08); border: 1px solid rgba(255, 170, 0, 0.4); width: 85%; max-width: 320px; border-radius: 24px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -111,6 +143,12 @@
     </style>
 </head>
 <body>
+
+    <!-- Custom Toast Message -->
+    <div class="custom-toast" id="customToast">
+        <div class="toast-icon" id="toastIcon">⚠️</div>
+        <div class="toast-text" id="toastText">You have not joined yet</div>
+    </div>
 
     <div class="app-header">
         <div class="header-title">
@@ -270,6 +308,7 @@
         <div id="page-missions" class="page">
             <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(0,255,136,0.4);">MISSIONS</h3>
             <div class="quick-nav">
+                <!-- Mission 1 -->
                 <div class="nav-item-card" id="mission-sabx">
                     <div class="nav-icon-box bg-blue">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#4facfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
@@ -283,6 +322,7 @@
                     <div id="claimed-text" style="display: none; color: var(--accent); font-weight: 700; font-size: 12px;">Claimed 🏆</div>
                 </div>
 
+                <!-- Mission 2 (New Channel) -->
                 <div class="nav-item-card" id="mission-new">
                     <div class="nav-icon-box bg-purple">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#b84dfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
@@ -341,15 +381,21 @@
                     <button class="btn btn-outline" onclick="openHistoryModal()">↺ Activity Log</button>
                 </div>
             </div>
+            
+            <!-- WITHDRAWAL REQUESTS WITH STATUS -->
             <div class="quick-nav">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div class="quick-title" style="margin: 0;">WITHDRAWAL REQUESTS</div>
                     <div style="color: var(--accent); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="openWithdrawModal()">+ New Cashout</div>
                 </div>
-                <div style="text-align: center; padding: 30px 0;">
-                    <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
-                    <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT (BEP-20) payout history will appear here</div>
+                
+                <div id="withdraw-status-list">
+                    <!-- Dynamic status cards will appear here -->
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
+                        <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT payout history will appear here</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -431,11 +477,12 @@
         let userId = null;
         let currentBalance = 0.000;
         let userRefs = 0;
+        let isJoined = false;
+        let isJoined2 = false;
         const BOT_USERNAME = "EarnUSDTPro_Bot"; 
 
         const user = tg.initDataUnsafe?.user;
         
-        // এখানে startapp দিয়ে রেফারেল আইডি নেওয়া হচ্ছে
         let referrerId = null;
         if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
             referrerId = tg.initDataUnsafe.start_param;
@@ -449,8 +496,6 @@
             document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             document.getElementById('user-username').innerText = user.username ? '@' + user.username : '';
             document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
-            
-            // লিংক আপডেট: startapp ব্যবহার করা হলো
             document.getElementById('ref-link').innerText = `https://t.me/${BOT_USERNAME}?startapp=${user.id}`;
             
             fetch('/api/get_user', {
@@ -525,6 +570,19 @@
                     updateBalanceUI(data.balance);
                 });
             }
+
+            if (tabId === 'wallet' && userId) {
+                fetchWithdrawStatus();
+            }
+        }
+
+        // কাস্টম টোস্ট মেসেজ দেখানোর ফাংশন
+        function showToast(message, icon = "⚠️") {
+            const toast = document.getElementById('customToast');
+            document.getElementById('toastText').innerText = message;
+            document.getElementById('toastIcon').innerText = icon;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
         function openWithdrawModal() { 
@@ -558,11 +616,56 @@
                 if(data.status === "success") {
                     showCustomAlert("Success!", "Your withdraw request has been sent to the admin. Please wait for payout.", "✅");
                     closeModal('withdrawModal');
+                    fetchWithdrawStatus(); // স্ট্যাটাস আপডেট
                 } else {
                     showCustomAlert("Error", data.message, "❌");
                 }
                 btn.innerText = "Confirm Cashout";
                 btn.disabled = false;
+            });
+        }
+
+        // উইথড্র স্ট্যাটাস লোড করার ফাংশন
+        function fetchWithdrawStatus() {
+            fetch('/api/get_withdrawals', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId.toString() })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('withdraw-status-list');
+                if (data.withdrawals.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 20px 0;">
+                            <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
+                            <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT payout history will appear here</div>
+                        </div>`;
+                    return;
+                }
+                
+                container.innerHTML = data.withdrawals.map(w => {
+                    const isPending = w.status === 'Pending';
+                    const badgeClass = isPending ? 'badge-pending' : 'badge-paid';
+                    const iconClass = isPending ? 'status-icon-pending' : 'status-icon-paid';
+                    const iconSVG = isPending 
+                        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ffaa00"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`
+                        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="#00ff88"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+                    
+                    return `
+                        <div class="status-card">
+                            <div class="status-left">
+                                <div class="status-icon-box ${iconClass}">${iconSVG}</div>
+                                <div>
+                                    <div class="status-amount">${w.amount.toFixed(3)} USDT</div>
+                                    <div class="status-date">${w.time}</div>
+                                </div>
+                            </div>
+                            <div class="status-badge ${badgeClass}">${w.status}</div>
+                        </div>
+                    `;
+                }).join('');
             });
         }
 
@@ -579,13 +682,21 @@
             tg.openTelegramLink(`https://t.me/share/url?url=${link}&text=${text}`);
         }
 
+        // Mission 1: Join Logic
         function joinChannel() {
             tg.openTelegramLink('https://t.me/SABXEarnBD');
+            isJoined = true; // ফ্ল্যাগ অন করা হলো
             document.getElementById('join-btn').style.display = 'none';
             document.getElementById('verify-btn').style.display = 'block';
         }
 
         function verifyChannel() {
+            // যদি চ্যানেলে জয়েন না করে সরাসরি verify এ চাপ দেয়
+            if (!isJoined && userId) {
+                showToast("You have not joined yet", "⚠️");
+                return;
+            }
+
             if(userId) {
                 const btn = document.getElementById('verify-btn');
                 btn.innerText = 'Verifying...'; btn.style.background = '#333'; btn.style.color = '#fff'; btn.disabled = true;
@@ -614,13 +725,21 @@
             }
         }
 
+        // Mission 2: Join Logic
         function joinChannel2() {
             tg.openTelegramLink('https://t.me/SX_EARN_PRO');
+            isJoined2 = true; // ফ্ল্যাগ অন করা হলো
             document.getElementById('join-btn2').style.display = 'none';
             document.getElementById('verify-btn2').style.display = 'block';
         }
 
         function verifyChannel2() {
+             // যদি চ্যানেলে জয়েন না করে সরাসরি verify এ চাপ দেয়
+            if (!isJoined2 && userId) {
+                showToast("You have not joined yet", "⚠️");
+                return;
+            }
+
             if(userId) {
                 const btn = document.getElementById('verify-btn2');
                 btn.innerText = 'Verifying...'; btn.style.background = '#333'; btn.style.color = '#fff'; btn.disabled = true;
