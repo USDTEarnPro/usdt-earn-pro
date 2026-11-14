@@ -2,13 +2,14 @@ from flask import Flask, render_template, request, jsonify
 import telebot
 import os
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timedelta
+import random
 from telebot import types
 
 app = Flask(__name__, template_folder='.')
 
 BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
-ADMIN_ID = 123456789 # আপনার টেলিগ্রাম আইডি
+ADMIN_ID = 123456789 # আপনার টেলিগ্রাম আইডি দিন
 bot = telebot.TeleBot(BOT_TOKEN)
 
 MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
@@ -35,7 +36,8 @@ def get_user():
         if not user:
             users_col.insert_one({
                 "user_id": user_id, "name": name, "balance": 0.0, 
-                "missions": 0, "joined": 0, "joined2": 0, "refs": 0
+                "missions": 0, "joined": 0, "joined2": 0, "refs": 0,
+                "last_daily": "", "last_spin": ""
             })
             
             if referrer_id and referrer_id != user_id:
@@ -64,15 +66,80 @@ def get_user():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# নতুন রুট: ইউজারের উইথড্র হিস্ট্রি আনা
-@app.route('/api/get_withdrawals', methods=['POST'])
-def get_withdrawals():
+@app.route('/api/get_leaderboard', methods=['GET'])
+def get_leaderboard():
+    try:
+        top_users = list(users_col.find({"refs": {"$gt": 0}}).sort("refs", -1).limit(5))
+        leaderboard = [{"name": u.get("name", "User"), "refs": u.get("refs", 0)} for u in top_users]
+        return jsonify({"status": "success", "leaderboard": leaderboard})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+@app.route('/api/daily_bonus', methods=['POST'])
+def daily_bonus():
     try:
         data = request.json
         user_id = str(data.get('user_id'))
-        withdrawals = list(withdraw_col.find({"user_id": user_id}).sort("_id", -1))
-        wd_data = [{"amount": w["amount"], "status": w["status"], "time": w["time"]} for w in withdrawals]
-        return jsonify({"status": "success", "withdrawals": wd_data})
+        user = users_col.find_one({"user_id": user_id})
+        
+        now = datetime.now()
+        last_daily = user.get("last_daily", "")
+        
+        if last_daily:
+            last_time = datetime.strptime(last_daily, "%Y-%m-%d %H:%M:%S")
+            if now - last_time < timedelta(hours=24):
+                return jsonify({"status": "error", "message": "You already claimed your daily bonus today. Come back tomorrow!"})
+        
+        reward = 0.001
+        users_col.update_one({"user_id": user_id}, {
+            "$inc": {"balance": reward},
+            "$set": {"last_daily": now.strftime("%Y-%m-%d %H:%M:%S")}
+        })
+        history_col.insert_one({"user_id": user_id, "task": "Daily Check-in Bonus", "amount": reward, "time": now.strftime("%Y-%m-%d %H:%M")})
+        
+        return jsonify({"status": "success", "message": f"Daily Bonus Claimed! +{reward} USDT added."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+@app.route('/api/spin_wheel', methods=['POST'])
+def spin_wheel():
+    try:
+        data = request.json
+        user_id = str(data.get('user_id'))
+        user = users_col.find_one({"user_id": user_id})
+        
+        now = datetime.now()
+        last_spin = user.get("last_spin", "")
+        
+        if last_spin:
+            last_time = datetime.strptime(last_spin, "%Y-%m-%d %H:%M:%S")
+            if now - last_time < timedelta(hours=12):
+                return jsonify({"status": "error", "message": "You can only spin every 12 hours!"})
+        
+        reward = random.choice([0.001, 0.002, 0.003, 0.004, 0.005])
+        
+        users_col.update_one({"user_id": user_id}, {
+            "$inc": {"balance": reward},
+            "$set": {"last_spin": now.strftime("%Y-%m-%d %H:%M:%S")}
+        })
+        history_col.insert_one({"user_id": user_id, "task": "Spin & Win Reward", "amount": reward, "time": now.strftime("%Y-%m-%d %H:%M")})
+        
+        return jsonify({"status": "success", "reward": reward, "message": f"You won {reward} USDT!"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+# নতুন রুট: অ্যাড দেখলে রিওয়ার্ড
+@app.route('/api/add_ad_reward', methods=['POST'])
+def add_ad_reward():
+    try:
+        data = request.json
+        user_id = str(data.get('user_id'))
+        reward = 0.001
+        
+        users_col.update_one({"user_id": user_id}, {"$inc": {"balance": reward}})
+        history_col.insert_one({"user_id": user_id, "task": "Watched Video Ad", "amount": reward, "time": datetime.now().strftime("%Y-%m-%d %H:%M")})
+        
+        return jsonify({"status": "success", "message": f"Ad reward claimed! +{reward} USDT added."})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
@@ -118,6 +185,17 @@ def verify_mission2():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+@app.route('/api/get_withdrawals', methods=['POST'])
+def get_withdrawals():
+    try:
+        data = request.json
+        user_id = str(data.get('user_id'))
+        withdrawals = list(withdraw_col.find({"user_id": user_id}).sort("_id", -1))
+        wd_data = [{"amount": w["amount"], "status": w["status"], "time": w["time"]} for w in withdrawals]
+        return jsonify({"status": "success", "withdrawals": wd_data})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 @app.route('/api/request_withdraw', methods=['POST'])
 def request_withdraw():
     try:
@@ -133,7 +211,7 @@ def request_withdraw():
                 "amount": amount, "status": "Pending", "time": datetime.now().strftime("%Y-%m-%d %H:%M")
             })
             try:
-                bot.send_message(ADMIN_ID, f"🚨 New Withdraw Request!\n👤 Name: {user.get('name')}\n🆔 ID: `{user_id}`\n💰 Amount: {amount} USDT\n📍 Address: `{address}`\n\nTo Pay: `/pay {user_id} {amount}`", parse_mode='Markdown')
+                bot.send_message(ADMIN_ID, f"🚨 New Withdraw Request!\n👤 Name: {user.get('name')}\n🆔 ID: `{user_id}`\n💰 Amount: {amount} USDT\n📍 Address: `{address}`", parse_mode='Markdown')
             except: pass
             return jsonify({"status": "success", "message": "Withdraw request sent to admin."})
         return jsonify({"status": "error", "message": "Requirements not met or insufficient balance."})
