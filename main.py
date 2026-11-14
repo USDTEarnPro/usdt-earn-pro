@@ -9,7 +9,8 @@ from telebot import types
 app = Flask(__name__, template_folder='.')
 
 BOT_TOKEN = '9127167452:AAHshYnF_2aRCa8zGgE6GvVHBTfSL9HBakM' 
-ADMIN_ID = 123456789 # আপনার টেলিগ্রাম আইডি দিন
+# এখানে আপনার টেলিগ্রাম আইডি দিন
+ADMIN_ID = 123456789 
 bot = telebot.TeleBot(BOT_TOKEN)
 
 MONGO_URI = "mongodb+srv://mrhasan77722_db_user:FQYHQ67tI37CGkTm@cluster0.4tam4es.mongodb.net/?retryWrites=true&w=majority"
@@ -128,7 +129,6 @@ def spin_wheel():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# অ্যাড দেখার পর ফ্রন্টএন্ড থেকে কল হবে
 @app.route('/api/add_ad_reward', methods=['POST'])
 def add_ad_reward():
     try:
@@ -143,7 +143,6 @@ def add_ad_reward():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# Adsgram সার্ভার থেকে সিকিউর ভেরিফিকেশনের জন্য (যদি ড্যাশবোর্ডে Reward URL সেট করেন)
 @app.route('/api/adsgram_reward')
 def adsgram_reward():
     try:
