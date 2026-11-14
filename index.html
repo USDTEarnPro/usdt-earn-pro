@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>USDT EARN PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Adsgram Script -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #040806; --card-bg: rgba(13, 26, 21, 0.8); --text: #ffffff; --accent: #00ff88; --border: rgba(0, 255, 136, 0.15); --text-muted: #7a8f86; }
@@ -51,12 +53,15 @@
         .stat-title { font-weight: 700; font-size: 13px; color: #fff;}
         .stat-value { color: var(--text-muted); font-size: 11px; margin-top: 5px; font-weight: 500;}
 
+        /* Actions Row for Daily/Spin/Ad */
+        .actions-row { display: flex; gap: 12px; margin-bottom: 20px; }
+        .action-card { flex: 1; background: linear-gradient(145deg, #0f1c18, #060d0a); border: 1px solid var(--border); border-radius: 20px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
+        .action-card:active { transform: scale(0.95); }
+        .action-icon { font-size: 24px; margin-bottom: 8px; }
+        .action-title { font-weight: 700; font-size: 12px; color: #fff; margin-bottom: 2px;}
+        .action-sub { font-size: 10px; color: var(--accent); font-weight: 600; }
+
         .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px);}
-        .explore-card { display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: linear-gradient(145deg, #0f1c18, #060d0a); border-top: 1px solid rgba(0,255,136,0.2);}
-        .explore-left { width: 70%; }
-        .explore-title { font-weight: 800; font-size: 16px; margin-bottom: 8px; }
-        .explore-text { color: var(--text-muted); font-size: 12px; line-height: 1.5; margin-bottom: 15px; font-weight: 500;}
-        .explore-icon { width: 60px; height: 60px; }
         
         .quick-nav { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px;}
         .quick-title { font-size: 11px; color: var(--text-muted); font-weight: 800; margin-bottom: 15px; letter-spacing: 0.5px;}
@@ -100,36 +105,28 @@
         .history-amount { color: var(--accent); font-weight: 800; font-size: 14px; background: #0d2219; padding: 4px 10px; border-radius: 8px; height: fit-content;}
 
         /* Premium Toast (Floating Message) */
-        .custom-toast { 
-            position: fixed; top: 10%; left: 50%; transform: translateX(-50%) translateY(-20px); 
-            background: rgba(30, 40, 35, 0.95); backdrop-filter: blur(10px);
-            padding: 12px 25px; border-radius: 30px; display: flex; align-items: center; gap: 10px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); 
-            border: 1px solid rgba(255, 255, 255, 0.1); z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s ease;
-        }
+        .custom-toast { position: fixed; top: 10%; left: 50%; transform: translateX(-50%) translateY(-20px); background: rgba(30, 40, 35, 0.95); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border: 1px solid rgba(255, 255, 255, 0.1); z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s ease; }
         .custom-toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
         .toast-icon { font-size: 20px; filter: drop-shadow(0 0 5px rgba(255,170,0,0.5)); }
         .toast-text { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px;}
 
         /* Withdraw Status Card Style */
-        .status-card {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px; padding: 15px; margin-bottom: 10px;
-        }
+        .status-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 15px; margin-bottom: 10px; }
         .status-left { display: flex; align-items: center; gap: 12px; }
-        .status-icon-box {
-            width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center;
-        }
+        .status-icon-box { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
         .status-icon-pending { background: linear-gradient(135deg, rgba(255,170,0,0.15), rgba(255,100,0,0.15)); border: 1px solid rgba(255,170,0,0.3); }
         .status-icon-paid { background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,200,100,0.15)); border: 1px solid rgba(0,255,136,0.3); }
         .status-amount { font-weight: 800; font-size: 16px; color: #fff; }
         .status-date { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
-        .status-badge {
-            font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .status-badge { font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
         .badge-pending { color: #ffaa00; background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.2); box-shadow: 0 0 10px rgba(255,170,0,0.1);}
         .badge-paid { color: var(--accent); background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); box-shadow: 0 0 10px rgba(0,255,136,0.1);}
+
+        /* Leaderboard Style */
+        .lb-item { display: flex; justify-content: space-between; padding: 10px 15px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .lb-rank { font-weight: 800; color: #ffaa00; margin-right: 10px; }
+        .lb-name { font-weight: 600; color: #fff; flex: 1;}
+        .lb-refs { font-weight: 800; color: var(--accent); }
 
         /* Premium Alert Modal CSS */
         .custom-alert-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 9999; }
@@ -144,7 +141,6 @@
 </head>
 <body>
 
-    <!-- Custom Toast Message -->
     <div class="custom-toast" id="customToast">
         <div class="toast-icon" id="toastIcon">⚠️</div>
         <div class="toast-text" id="toastText">You have not joined yet</div>
@@ -264,6 +260,24 @@
                 </div>
             </div>
 
+            <div class="actions-row">
+                <div class="action-card" onclick="claimDailyBonus()">
+                    <div class="action-icon">🎁</div>
+                    <div class="action-title">Daily Bonus</div>
+                    <div class="action-sub">+0.001 USDT</div>
+                </div>
+                <div class="action-card" onclick="spinWheel()">
+                    <div class="action-icon">🎰</div>
+                    <div class="action-title">Spin & Win</div>
+                    <div class="action-sub">Up to 0.005</div>
+                </div>
+                <div class="action-card" onclick="watchAd()">
+                    <div class="action-icon">📺</div>
+                    <div class="action-title">Watch Ad</div>
+                    <div class="action-sub">+0.001 USDT</div>
+                </div>
+            </div>
+
             <div class="card explore-card" onclick="switchTab('missions')">
                 <div class="explore-left">
                     <div class="explore-title">Explore & Earn USDT</div>
@@ -308,7 +322,6 @@
         <div id="page-missions" class="page">
             <h3 style="text-align: center; margin-bottom: 20px; color: var(--accent); font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(0,255,136,0.4);">MISSIONS</h3>
             <div class="quick-nav">
-                <!-- Mission 1 -->
                 <div class="nav-item-card" id="mission-sabx">
                     <div class="nav-icon-box bg-blue">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#4facfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
@@ -322,7 +335,6 @@
                     <div id="claimed-text" style="display: none; color: var(--accent); font-weight: 700; font-size: 12px;">Claimed 🏆</div>
                 </div>
 
-                <!-- Mission 2 (New Channel) -->
                 <div class="nav-item-card" id="mission-new">
                     <div class="nav-icon-box bg-purple">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#b84dfe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
@@ -355,9 +367,12 @@
                 </div>
 
                 <div style="border: 1px solid var(--border); border-radius: 14px; padding: 15px; margin-bottom: 20px; background: rgba(0,255,136,0.03);">
-                    <div style="color: var(--accent); font-size: 11px; font-weight: 800; margin-bottom: 5px;">⚡ Verified Referral Milestone</div>
-                    <div style="font-weight: 800; font-size: 14px; margin-bottom: 8px;">Earn +0.050 USDT per verified friend</div>
+                    <div style="color: var(--accent); font-size: 11px; font-weight: 800; margin-bottom: 10px;">🏆 TOP REFERRERS LEADERBOARD</div>
+                    <div id="leaderboard-list">
+                        <div style="text-align: center; font-size: 12px; color: var(--text-muted);">Loading...</div>
+                    </div>
                 </div>
+
                 <div class="invite-box">
                     <div class="invite-link" id="ref-link">https://t.me/...</div>
                     <div class="copy-icon" onclick="copyLink()">📋</div>
@@ -382,7 +397,6 @@
                 </div>
             </div>
             
-            <!-- WITHDRAWAL REQUESTS WITH STATUS -->
             <div class="quick-nav">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div class="quick-title" style="margin: 0;">WITHDRAWAL REQUESTS</div>
@@ -390,7 +404,6 @@
                 </div>
                 
                 <div id="withdraw-status-list">
-                    <!-- Dynamic status cards will appear here -->
                     <div style="text-align: center; padding: 20px 0;">
                         <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
                         <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
@@ -474,6 +487,9 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
+        // Adsgram Init
+        const adController = window.Adsgram.init({ blockId: "59573" });
+
         let userId = null;
         let currentBalance = 0.000;
         let userRefs = 0;
@@ -569,6 +585,7 @@
                     document.getElementById('ref-count').innerText = `${data.refs} Friends`;
                     updateBalanceUI(data.balance);
                 });
+                fetchLeaderboard();
             }
 
             if (tabId === 'wallet' && userId) {
@@ -576,18 +593,103 @@
             }
         }
 
-        // কাস্টম টোস্ট মেসেজ দেখানোর ফাংশন
-        function showToast(message, icon = "⚠️") {
-            const toast = document.getElementById('customToast');
-            document.getElementById('toastText').innerText = message;
-            document.getElementById('toastIcon').innerText = icon;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        function fetchLeaderboard() {
+            fetch('/api/get_leaderboard')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('leaderboard-list');
+                if(data.status === 'success' && data.leaderboard.length > 0) {
+                    list.innerHTML = data.leaderboard.map((u, index) => `
+                        <div class="lb-item">
+                            <div style="display:flex; align-items:center;">
+                                <span class="lb-rank">#${index + 1}</span>
+                                <span class="lb-name">${u.name}</span>
+                            </div>
+                            <span class="lb-refs">${u.refs} Refs</span>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = `<div style="text-align: center; font-size: 12px; color: var(--text-muted);">No referrals yet.</div>`;
+                }
+            });
         }
 
-        function openWithdrawModal() { 
-            document.getElementById('withdrawModal').style.display = 'flex'; 
+        function claimDailyBonus() {
+            if(!userId) return;
+            fetch('/api/daily_bonus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId.toString() })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    showCustomAlert("Success!", data.message, "🎁");
+                    fetchUserData();
+                } else {
+                    showCustomAlert("Wait!", data.message, "⏱");
+                }
+            });
         }
+
+        function spinWheel() {
+            if(!userId) return;
+            showToast("Spinning...", "🎰");
+            setTimeout(() => {
+                fetch('/api/spin_wheel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId.toString() })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        showCustomAlert("You Won!", data.message, "🏆");
+                        fetchUserData();
+                    } else {
+                        showCustomAlert("Wait!", data.message, "⏱");
+                    }
+                });
+            }, 1500);
+        }
+
+        async function watchAd() {
+            try {
+                const result = await adController.show();
+                if (result.done) {
+                    fetch('/api/add_ad_reward', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: userId.toString() })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.status === "success") {
+                            showCustomAlert("Success!", data.message, "✅");
+                            fetchUserData();
+                        }
+                    });
+                }
+            } catch (e) {
+                showToast("Ad not available right now", "⚠️");
+            }
+        }
+
+        function fetchUserData() {
+            fetch('/api/get_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId.toString(), name: document.getElementById('user-name').innerText })
+            })
+            .then(res => res.json())
+            .then(data => {
+                currentBalance = data.balance;
+                updateBalanceUI(currentBalance);
+                renderHistory(data.history);
+            });
+        }
+
+        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
         
         function submitWithdraw() {
             if (userRefs < 10) {
@@ -616,7 +718,7 @@
                 if(data.status === "success") {
                     showCustomAlert("Success!", "Your withdraw request has been sent to the admin. Please wait for payout.", "✅");
                     closeModal('withdrawModal');
-                    fetchWithdrawStatus(); // স্ট্যাটাস আপডেট
+                    fetchWithdrawStatus();
                 } else {
                     showCustomAlert("Error", data.message, "❌");
                 }
@@ -625,7 +727,6 @@
             });
         }
 
-        // উইথড্র স্ট্যাটাস লোড করার ফাংশন
         function fetchWithdrawStatus() {
             fetch('/api/get_withdrawals', {
                 method: 'POST',
@@ -636,12 +737,7 @@
             .then(data => {
                 const container = document.getElementById('withdraw-status-list');
                 if (data.withdrawals.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 20px 0;">
-                            <div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div>
-                            <div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div>
-                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT payout history will appear here</div>
-                        </div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 20px 0;"><div style="font-size: 30px; color: #333; margin-bottom: 15px;">⏱</div><div style="font-weight: 700; font-size: 14px;">No Withdrawals Recorded</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Your USDT payout history will appear here</div></div>`;
                     return;
                 }
                 
@@ -649,22 +745,9 @@
                     const isPending = w.status === 'Pending';
                     const badgeClass = isPending ? 'badge-pending' : 'badge-paid';
                     const iconClass = isPending ? 'status-icon-pending' : 'status-icon-paid';
-                    const iconSVG = isPending 
-                        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ffaa00"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`
-                        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="#00ff88"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+                    const iconSVG = isPending ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ffaa00"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="#00ff88"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
                     
-                    return `
-                        <div class="status-card">
-                            <div class="status-left">
-                                <div class="status-icon-box ${iconClass}">${iconSVG}</div>
-                                <div>
-                                    <div class="status-amount">${w.amount.toFixed(3)} USDT</div>
-                                    <div class="status-date">${w.time}</div>
-                                </div>
-                            </div>
-                            <div class="status-badge ${badgeClass}">${w.status}</div>
-                        </div>
-                    `;
+                    return `<div class="status-card"><div class="status-left"><div class="status-icon-box ${iconClass}">${iconSVG}</div><div><div class="status-amount">${w.amount.toFixed(3)} USDT</div><div class="status-date">${w.time}</div></div></div><div class="status-badge ${badgeClass}">${w.status}</div></div>`;
                 }).join('');
             });
         }
@@ -682,25 +765,21 @@
             tg.openTelegramLink(`https://t.me/share/url?url=${link}&text=${text}`);
         }
 
-        // Mission 1: Join Logic
         function joinChannel() {
             tg.openTelegramLink('https://t.me/SABXEarnBD');
-            isJoined = true; // ফ্ল্যাগ অন করা হলো
+            isJoined = true;
             document.getElementById('join-btn').style.display = 'none';
             document.getElementById('verify-btn').style.display = 'block';
         }
 
         function verifyChannel() {
-            // যদি চ্যানেলে জয়েন না করে সরাসরি verify এ চাপ দেয়
             if (!isJoined && userId) {
                 showToast("You have not joined yet", "⚠️");
                 return;
             }
-
             if(userId) {
                 const btn = document.getElementById('verify-btn');
                 btn.innerText = 'Verifying...'; btn.style.background = '#333'; btn.style.color = '#fff'; btn.disabled = true;
-
                 fetch('/api/verify_mission', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -711,11 +790,7 @@
                     if(data.status === "success") {
                         btn.style.display = 'none';
                         document.getElementById('claimed-text').style.display = 'block';
-                        currentBalance += 0.010;
-                        updateBalanceUI(currentBalance);
-                        let missions = parseInt(document.getElementById('mission-count').innerText) + 1;
-                        document.getElementById('mission-count').innerText = `${missions} Completed`;
-                        fetchHistory();
+                        fetchUserData();
                         showCustomAlert("Success!", "Mission verified successfully! +0.010 USDT added.", "🎉");
                     } else {
                         showCustomAlert("Error", data.message, "❌");
@@ -725,25 +800,21 @@
             }
         }
 
-        // Mission 2: Join Logic
         function joinChannel2() {
             tg.openTelegramLink('https://t.me/SX_EARN_PRO');
-            isJoined2 = true; // ফ্ল্যাগ অন করা হলো
+            isJoined2 = true;
             document.getElementById('join-btn2').style.display = 'none';
             document.getElementById('verify-btn2').style.display = 'block';
         }
 
         function verifyChannel2() {
-             // যদি চ্যানেলে জয়েন না করে সরাসরি verify এ চাপ দেয়
             if (!isJoined2 && userId) {
                 showToast("You have not joined yet", "⚠️");
                 return;
             }
-
             if(userId) {
                 const btn = document.getElementById('verify-btn2');
                 btn.innerText = 'Verifying...'; btn.style.background = '#333'; btn.style.color = '#fff'; btn.disabled = true;
-
                 fetch('/api/verify_mission2', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -754,11 +825,7 @@
                     if(data.status === "success") {
                         btn.style.display = 'none';
                         document.getElementById('claimed-text2').style.display = 'block';
-                        currentBalance += 0.010;
-                        updateBalanceUI(currentBalance);
-                        let missions = parseInt(document.getElementById('mission-count').innerText) + 1;
-                        document.getElementById('mission-count').innerText = `${missions} Completed`;
-                        fetchHistory();
+                        fetchUserData();
                         showCustomAlert("Success!", "Mission verified successfully! +0.010 USDT added.", "🎉");
                     } else {
                         showCustomAlert("Error", data.message, "❌");
@@ -785,17 +852,15 @@
             `).join('');
         }
 
-        function fetchHistory() {
-            fetch('/api/get_user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId.toString(), name: document.getElementById('user-name').innerText })
-            })
-            .then(res => res.json())
-            .then(data => { renderHistory(data.history); });
-        }
-
         function openHistoryModal() { document.getElementById('historyModal').style.display = 'flex'; }
+
+        function showToast(message, icon = "⚠️") {
+            const toast = document.getElementById('customToast');
+            document.getElementById('toastText').innerText = message;
+            document.getElementById('toastIcon').innerText = icon;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
 
         function showCustomAlert(title, message, icon = "⚠️") {
             document.getElementById('alertTitle').innerText = title;
