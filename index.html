@@ -18,14 +18,14 @@
         :root { 
             --bg-dark: #050c0a;
             --bg-light: #0b1a15;
-            --card-bg: linear-gradient(145deg, rgba(20, 35, 30, 0.7), rgba(10, 20, 16, 0.5));
-            --card-border: rgba(110,255,170,0.2);
+            --card-bg: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            --card-border: rgba(110,255,170,0.25);
             
             --card-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 25px rgba(80,255,160,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
             --card-glow-hover: 0 15px 40px rgba(0,0,0,0.8), 0 0 40px rgba(80,255,160,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
 
-            --gold-bg: linear-gradient(145deg, rgba(35, 30, 20, 0.7), rgba(20, 16, 10, 0.5));
-            --gold-border: rgba(255,190,60,0.25);
+            --gold-bg: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            --gold-border: rgba(255,190,60,0.3);
             --gold-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 25px rgba(255,190,60,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
             --gold-glow-hover: 0 15px 40px rgba(0,0,0,0.8), 0 0 40px rgba(255,190,60,0.25);
 
@@ -38,11 +38,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         
-        html, body {
-            height: 100%;
-            min-height: 100vh;
-        }
-
         body { 
             background-color: var(--bg-dark); 
             background-image: 
@@ -123,7 +118,7 @@
 
         .container { padding: 0 20px; position: relative; z-index: 1; min-height: calc(100vh - 200px); }
         
-        /* FIXED SCREEN TRANSITIONS */
+        /* SCREEN TRANSITIONS */
         .page { 
             display: none; 
             width: 100%;
@@ -734,7 +729,6 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
-        // আপনার নতুন Block ID এখানে সেট করা আছে
         const adController = window.Adsgram.init({ blockId: "59656" });
 
         let userId = null;
